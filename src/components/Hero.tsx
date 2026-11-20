@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useId } from "react";
 import { siteContent, ToolItem } from "@/data/content";
 import { ToolIcon } from "./ToolIcon";
 import { WorkflowCanvas } from "./WorkflowCanvas";
+import { SplitHeading } from "./SplitHeading";
 import { ArrowUpRight } from "lucide-react";
 
 export function Hero() {
@@ -218,17 +219,18 @@ export function Hero() {
             }}
           >
             {/* Main Headline (Scaled dynamically relative to ring size: calc(ring * 0.078)) */}
-            <h1
-              className="font-extrabold tracking-tight text-[#050409] leading-[1.12]"
+            <SplitHeading
+              as="h1"
+              lead={typeof hero.headline === "object" ? hero.headline.lead : "I build the systems that"}
+              accent={typeof hero.headline === "object" ? hero.headline.accent : "fill your pipeline."}
+              className="font-extrabold tracking-tight leading-[1.12]"
               style={{
                 fontSize: `clamp(24px, ${ringSize * 0.076}px, 50px)`,
                 maxWidth: `min(${ringSize * 0.72}px, 500px)`,
                 marginBottom: ringSize < 560 ? "8px" : "14px",
               }}
-            >
-              I build the systems that{" "}
-              <span className="text-[#1F4633] inline-block">fill your pipeline.</span>
-            </h1>
+              enableMotion={false}
+            />
 
             {/* Sub-line (Max-width calc(ring * 0.56), muted dark text) */}
             <p

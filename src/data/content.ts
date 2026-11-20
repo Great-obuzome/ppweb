@@ -67,6 +67,11 @@ export interface StatItem {
   isPlaceholderTodo?: boolean;
 }
 
+export interface SplitText {
+  lead: string;
+  accent: string;
+}
+
 export interface PortfolioContent {
   brand: {
     name: string;
@@ -90,7 +95,7 @@ export interface PortfolioContent {
     ctaPrimary: { label: string; href: string };
   };
   hero: {
-    headline: string;
+    headline: SplitText | string;
     subline: string;
     ctaPrimary: { label: string; href: string };
     ctaSecondary: { label: string; href: string };
@@ -104,8 +109,8 @@ export interface PortfolioContent {
     // Mode setting: 'platforms' (current) or 'clients'.
     // When real client logos are ready, switch mode to 'clients', add files in /public/clients, and the label will automatically change to "Working with".
     mode: 'platforms' | 'clients';
-    platformsLabel: string;
-    clientsLabel: string;
+    platformsLabel: SplitText | string;
+    clientsLabel: SplitText | string;
     // NOTE: Remove any platform I don't have a live profile on.
     platforms: PlatformItem[];
     clients: ClientItem[];
@@ -113,7 +118,7 @@ export interface PortfolioContent {
   tools: ToolItem[];
   services: {
     eyebrow: string;
-    heading: string;
+    heading: SplitText | string;
     description: string;
     allServicesLabel: string;
     allServicesUrl: string;
@@ -121,18 +126,18 @@ export interface PortfolioContent {
   };
   process: {
     eyebrow: string;
-    heading: string;
+    heading: SplitText | string;
     steps: StepItem[];
   };
   caseStudies: {
     eyebrow: string;
-    heading: string;
+    heading: SplitText | string;
     subheading: string;
     items: CaseStudyItem[];
   };
   about: {
     eyebrow: string;
-    heading: string;
+    heading: SplitText | string;
     bio: string;
     photoUrl: string;
     photoFallback: string;
@@ -143,11 +148,11 @@ export interface PortfolioContent {
   };
   testimonials: {
     eyebrow: string;
-    heading: string;
+    heading: SplitText | string;
     items: TestimonialItem[];
   };
   finalCta: {
-    heading: string;
+    heading: SplitText | string;
     subheading: string;
     ctaPrimary: { label: string; href: string };
     emailLabel: string;
@@ -184,7 +189,10 @@ export const siteContent: PortfolioContent = {
   },
 
   hero: {
-    headline: "I build the systems that fill your pipeline.",
+    headline: {
+      lead: "I build the systems that",
+      accent: "fill your pipeline.",
+    },
     subline: "GTM engineer. Clay, n8n, AI agents and outbound automation for startups and agencies.",
     ctaPrimary: { label: "Book a free discovery call", href: "https://calendly.com/upbynature/discovery-call" },
     ctaSecondary: { label: "See my work", href: "#work" },
@@ -198,8 +206,14 @@ export const siteContent: PortfolioContent = {
   // SECTION 2 CONFIGURATION: "platforms" (current) or "clients"
   section2: {
     mode: "platforms",
-    platformsLabel: "Find me on",
-    clientsLabel: "Working with",
+    platformsLabel: {
+      lead: "Find me",
+      accent: "on.",
+    },
+    clientsLabel: {
+      lead: "Working",
+      accent: "with.",
+    },
 
     // Remove any platform I don't have a live profile on.
     platforms: [
@@ -410,7 +424,10 @@ export const siteContent: PortfolioContent = {
   // Section 3: Services
   services: {
     eyebrow: "Services",
-    heading: "FROM COLD LIST TO BOOKED MEETING.",
+    heading: {
+      lead: "FROM COLD LIST TO",
+      accent: "BOOKED MEETING.",
+    },
     description:
       "Clay, n8n and AI systems that find, enrich and reach your ideal buyers, so your pipeline fills without the manual work.",
     allServicesLabel: "All services",
@@ -470,7 +487,10 @@ export const siteContent: PortfolioContent = {
   // Section 4: How I Work (Horizontal timeline)
   process: {
     eyebrow: "PROCESS",
-    heading: "How I Work",
+    heading: {
+      lead: "How I",
+      accent: "Work",
+    },
     steps: [
       {
         step: "01",
@@ -498,7 +518,10 @@ export const siteContent: PortfolioContent = {
   // Section 5: Selected Work
   caseStudies: {
     eyebrow: "SELECTED WORK",
-    heading: "Proven systems. Measurable revenue.",
+    heading: {
+      lead: "Proven systems.",
+      accent: "Measurable revenue.",
+    },
     subheading: "Real client architectures engineered for high-intent B2B conversion.",
     items: [
       {
@@ -543,7 +566,10 @@ export const siteContent: PortfolioContent = {
   // Section 6: About
   about: {
     eyebrow: "ABOUT",
-    heading: "Hi, I'm Daniel.",
+    heading: {
+      lead: "Hi, I'm",
+      accent: "Daniel.",
+    },
     bio: "I'm a GTM engineer with a background in data analytics. I build AI-powered lead generation, enrichment and outbound systems with tools like Clay and n8n, so startups, agencies and small businesses can fill their pipeline without the manual work.",
     photoUrl: "/images/daniel.webp",
     photoFallback: "/images/daniel.jpg",
@@ -560,7 +586,10 @@ export const siteContent: PortfolioContent = {
   // Section 7: Testimonials
   testimonials: {
     eyebrow: "TESTIMONIALS",
-    heading: "Trusted by founders and growth leaders.",
+    heading: {
+      lead: "Trusted by founders",
+      accent: "and growth leaders.",
+    },
     items: [
       {
         id: "test-1",
@@ -594,7 +623,10 @@ export const siteContent: PortfolioContent = {
 
   // Section 8: Final CTA + Footer
   finalCta: {
-    heading: "Ready to turn your outbound into a system?",
+    heading: {
+      lead: "Ready to turn your outbound",
+      accent: "into a system?",
+    },
     subheading:
       "Stop wasting hours on manual prospecting and burned domains. Let's engineer an automated, scalable pipeline that books qualified meetings while you sleep.",
     ctaPrimary: { label: "Book a free discovery call", href: "https://calendly.com/upbynature/discovery-call" },

@@ -7,6 +7,7 @@ import { FinalCtaAndFooter } from "@/components/FinalCtaAndFooter";
 import { projects, ProjectItem } from "@/data/projects";
 import { ProjectCard } from "@/components/ProjectCard";
 import { CaseStudyModal } from "@/components/CaseStudyModal";
+import { SplitHeading } from "@/components/SplitHeading";
 import { ArrowLeft, Search, Filter } from "lucide-react";
 
 type CategoryFilter = "All" | "Clay" | "n8n" | "Outbound" | "AI Agents" | "Dashboards";
@@ -60,9 +61,12 @@ export default function WorkLibraryPage() {
               PROJECT LIBRARY
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#050409] mb-4">
-            All Projects
-          </h1>
+          <SplitHeading
+            as="h1"
+            lead="All"
+            accent="Projects"
+            className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4"
+          />
           <p className="text-sm sm:text-base text-[#050409]/75 max-w-2xl font-normal leading-relaxed">
             Explore the complete directory of lead generation, waterfall enrichment, and outbound automation systems.
           </p>

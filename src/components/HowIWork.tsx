@@ -2,6 +2,7 @@
 
 import React from "react";
 import { siteContent, StepItem } from "@/data/content";
+import { SplitHeading } from "./SplitHeading";
 
 export function HowIWork() {
   const { process } = siteContent;
@@ -17,9 +18,10 @@ export function HowIWork() {
               {process.eyebrow}
             </span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#050409]">
-            {process.heading}
-          </h2>
+          <SplitHeading
+            split={process.heading}
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight"
+          />
         </div>
 
         {/* 4-step horizontal timeline */}

@@ -5,6 +5,7 @@ import { siteContent, ServiceItem, ToolItem } from "@/data/content";
 import { ToolIcon } from "./ToolIcon";
 import { Check, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { SplitHeading } from "./SplitHeading";
 
 export function Services() {
   const { services, tools } = siteContent;
@@ -56,15 +57,10 @@ export function Services() {
           </div>
 
           {/* Heading */}
-          <motion.h2
-            className="text-[clamp(34px,5vw,60px)] font-bold tracking-[-0.01em] leading-[1.05] text-[#050409] uppercase min-[900px]:max-w-[13ch] [text-wrap:balance]"
-            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.45, delay: 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
-          >
-            {services.heading}
-          </motion.h2>
+          <SplitHeading
+            split={services.heading}
+            className="text-[clamp(34px,5vw,60px)] font-bold tracking-[-0.01em] leading-[1.05] uppercase min-[900px]:max-w-[13ch] [text-wrap:balance]"
+          />
         </div>
 
         {/* Right Column: Description & Pill Button (stacks left on mobile, right-aligned & bottom-aligned on desktop) */}

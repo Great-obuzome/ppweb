@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { siteContent, StatItem } from "@/data/content";
+import { SplitHeading } from "./SplitHeading";
 import { ArrowUpRight } from "lucide-react";
 
 export function About() {
@@ -57,9 +58,10 @@ export function About() {
             </div>
 
             {/* Heading: "Hi, I'm Daniel." */}
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#050409] mb-6 leading-tight">
-              {about.heading}
-            </h2>
+            <SplitHeading
+              split={about.heading}
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 leading-tight"
+            />
 
             {/* Bio Body Text */}
             <p className="text-base sm:text-lg text-[#050409]/80 font-normal leading-relaxed mb-10 max-w-2xl">

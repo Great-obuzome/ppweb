@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { siteContent } from "@/data/content";
+import { SplitHeading } from "./SplitHeading";
 import { ArrowUpRight, Mail } from "lucide-react";
 
 export function FinalCtaAndFooter() {
@@ -24,9 +25,11 @@ export function FinalCtaAndFooter() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#F7F1DB] mb-6 leading-tight max-w-2xl">
-            {finalCta.heading}
-          </h2>
+          <SplitHeading
+            theme="cta"
+            split={finalCta.heading}
+            className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight max-w-2xl"
+          />
 
           <p className="text-base sm:text-lg text-[#F7F1DB]/80 font-normal max-w-xl mb-10 leading-relaxed">
             {finalCta.subheading}

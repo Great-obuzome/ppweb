@@ -6,6 +6,7 @@ import { siteContent } from "@/data/content";
 import { projects, ProjectItem } from "@/data/projects";
 import { ProjectCard } from "./ProjectCard";
 import { CaseStudyModal } from "./CaseStudyModal";
+import { SplitHeading } from "./SplitHeading";
 import { ArrowUpRight } from "lucide-react";
 
 export function SelectedWork() {
@@ -46,9 +47,10 @@ export function SelectedWork() {
                 {caseStudies.eyebrow}
               </span>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#050409]">
-              {caseStudies.heading}
-            </h2>
+            <SplitHeading
+              split={caseStudies.heading}
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight"
+            />
           </div>
           <p className="text-xs sm:text-sm text-[#050409]/60 max-w-xs font-normal">
             Automated architectures built for high-intent B2B conversion.

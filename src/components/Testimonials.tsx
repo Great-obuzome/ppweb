@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { siteContent, TestimonialItem } from "@/data/content";
+import { SplitHeading } from "./SplitHeading";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 export function Testimonials() {
@@ -27,9 +28,10 @@ export function Testimonials() {
               {testimonials.eyebrow}
             </span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#050409]">
-            {testimonials.heading}
-          </h2>
+          <SplitHeading
+            split={testimonials.heading}
+            className="text-3xl sm:text-5xl font-extrabold tracking-tight"
+          />
         </div>
 
         {/* Carousel buttons */}

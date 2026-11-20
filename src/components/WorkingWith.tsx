@@ -1,18 +1,23 @@
 import React from "react";
 import { siteContent, PlatformItem, ClientItem } from "@/data/content";
+import { SplitHeading } from "./SplitHeading";
 
 export function WorkingWith() {
   const { section2 } = siteContent;
   const isPlatformMode = section2.mode === "platforms";
+  const currentLabel = isPlatformMode ? section2.platformsLabel : section2.clientsLabel;
 
   return (
     <section className="w-full bg-[#050409] text-[#F7F1DB] min-h-[240px] md:min-h-[280px] py-14 px-6 sm:px-12 border-y border-[#F7F1DB]/10 flex flex-col justify-center relative z-20">
       <div className="max-w-6xl mx-auto w-full">
-        {/* Label top-left: Sentence case, ~18-20px, white at 80% opacity. No tiny all-caps text and no dot. */}
+        {/* Label top-left: Sentence case, ~18-20px, with two-tone styling */}
         <div className="mb-10 text-left">
-          <span className="text-lg sm:text-[20px] font-medium text-white/80 tracking-tight">
-            {isPlatformMode ? section2.platformsLabel : section2.clientsLabel}
-          </span>
+          <SplitHeading
+            as="h2"
+            theme="dark"
+            split={currentLabel}
+            className="text-lg sm:text-[20px] font-medium tracking-tight"
+          />
         </div>
 
         {/* MODE 1: PLATFORMS (Active) */}
