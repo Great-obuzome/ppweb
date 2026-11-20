@@ -43,31 +43,8 @@ export function Services() {
         {services.items.map((service: ServiceItem, idx: number) => (
           <div
             key={service.id}
-            className="group relative rounded-[20px] p-8 border border-[#1F4633]/15 shadow-sm transition-all duration-300 hover:border-[#1F4633]/40 hover:-translate-y-1 hover:shadow-lg motion-reduce:transform-none flex flex-col justify-between overflow-hidden"
-            style={{
-              background:
-                "linear-gradient(155deg, #FFFFFF 0%, #FAF8EE 35%, #E3E9D5 100%)",
-            }}
+            className="system-card group relative rounded-[20px] p-8 border border-[#1F4633]/10 shadow-sm transition-all duration-300 hover:border-[#1F4633]/35 hover:-translate-y-1 hover:shadow-md motion-reduce:transform-none flex flex-col justify-between overflow-hidden"
           >
-            {/* Soft radial highlight in the top-right corner for depth */}
-            <div
-              className="absolute -top-10 -right-10 w-56 h-56 rounded-full pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%)",
-              }}
-              aria-hidden="true"
-            />
-            {/* Subtle bottom-right green glow accent */}
-            <div
-              className="absolute -bottom-14 -right-14 w-60 h-60 rounded-full pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(31, 70, 51, 0.12) 0%, rgba(31, 70, 51, 0) 70%)",
-              }}
-              aria-hidden="true"
-            />
-
             {/* Top Indicator & Content */}
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
@@ -139,6 +116,34 @@ export function Services() {
           </div>
         ))}
       </div>
+
+      {/* Scoped CSS for multi-layer smooth gradient & hover transitions */}
+      <style jsx>{`
+        .system-card {
+          background-image:
+            radial-gradient(120% 90% at 0% 0%, #FFFFFF 0%, rgba(255, 255, 255, 0) 60%),
+            radial-gradient(130% 110% at 100% 100%, rgba(31, 70, 51, 0.14) 0%, rgba(31, 70, 51, 0.06) 45%, rgba(31, 70, 51, 0) 80%),
+            radial-gradient(90% 70% at 100% 0%, rgba(247, 241, 219, 0.9) 0%, rgba(247, 241, 219, 0) 70%),
+            radial-gradient(90% 70% at 0% 100%, rgba(31, 70, 51, 0.07) 0%, rgba(31, 70, 51, 0) 70%),
+            linear-gradient(155deg, #FFFEFA 0%, #F6F5E8 50%, #ECEFDC 100%);
+          background-size: 100% 100%;
+          background-position: center;
+          transition: border-color 300ms ease, transform 300ms ease, box-shadow 300ms ease, background-position 400ms ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          .system-card:hover {
+            background-position: 10px 10px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .system-card {
+            transition: none !important;
+            background-position: center !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
