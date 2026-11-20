@@ -22,10 +22,10 @@ export function Hero() {
     const handleResize = () => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const base = Math.min(vw * 0.62, vh * 0.86);
-      const maxVerticalFit = vh - 136;
-      const target = Math.min(base, maxVerticalFit > 0 ? maxVerticalFit : base);
-      const clamped = Math.max(480, Math.min(target, 780));
+      const computed = Math.min(vw * 0.62, vh * 0.86);
+      const maxVerticalFit = vh - 116; // navbar ~72px + worksWith ~36px + 8px padding
+      const target = Math.min(computed, maxVerticalFit > 520 ? maxVerticalFit : Math.max(520, maxVerticalFit));
+      const clamped = Math.max(520, Math.min(target, 780));
       setRingSize(clamped);
     };
 
@@ -40,17 +40,18 @@ export function Hero() {
     const rect = textBlockRef.current.getBoundingClientRect();
     const radius = (ringSize - 58) / 2;
     const safeRadius = radius - 29 - 24; // inner edge minus 24px clearance
-    const halfH = rect.height / (2 * contentScale);
-    const halfW = rect.width / (2 * contentScale);
+    const halfH = rect.height / 2;
+    const halfW = rect.width / 2;
     const cornerDist = Math.sqrt(halfW * halfW + halfH * halfH);
 
-    if (halfH > safeRadius || cornerDist > safeRadius + 30) {
-      const neededScale = Math.min(1, (safeRadius - 4) / Math.max(halfH, cornerDist * 0.72));
-      setContentScale(Math.max(0.85, neededScale));
+    if (cornerDist > safeRadius || halfH > safeRadius - 10) {
+      const neededScale = (safeRadius - 8) / Math.max(halfH + 10, cornerDist);
+      const target = Math.max(0.78, Number(neededScale.toFixed(2)));
+      setContentScale((prev) => (Math.abs(prev - target) > 0.02 ? target : prev));
     } else {
-      setContentScale(1);
+      setContentScale((prev) => (prev !== 1 ? 1 : prev));
     }
-  }, [ringSize, contentScale]);
+  }, [ringSize]);
 
   // Subtle mouse-parallax on desktop
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -220,9 +221,9 @@ export function Hero() {
             <h1
               className="font-extrabold tracking-tight text-[#050409] leading-[1.12]"
               style={{
-                fontSize: `clamp(26px, ${ringSize * 0.078}px, 52px)`,
-                maxWidth: `min(${ringSize * 0.74}px, 540px)`,
-                marginBottom: ringSize < 560 ? "10px" : "14px",
+                fontSize: `clamp(24px, ${ringSize * 0.076}px, 50px)`,
+                maxWidth: `min(${ringSize * 0.72}px, 500px)`,
+                marginBottom: ringSize < 560 ? "8px" : "14px",
               }}
             >
               I build the systems that{" "}
@@ -234,8 +235,8 @@ export function Hero() {
               className="text-[#050409]/75 font-normal leading-relaxed tracking-tight"
               style={{
                 fontSize: `clamp(12px, ${ringSize * 0.022}px, 15px)`,
-                maxWidth: `${ringSize * 0.56}px`,
-                marginBottom: ringSize < 560 ? "14px" : "20px",
+                maxWidth: `${ringSize * 0.54}px`,
+                marginBottom: ringSize < 560 ? "12px" : "18px",
               }}
             >
               GTM engineer. Clay, n8n, AI agents and outbound automation for startups and agencies.
@@ -243,16 +244,16 @@ export function Hero() {
 
             {/* CTAs: Primary Dark Pill Button + "See my work" Link */}
             <div
-              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4"
+              className="flex flex-row items-center justify-center gap-2.5 sm:gap-4"
               style={{
-                marginBottom: ringSize < 560 ? "12px" : "16px",
+                marginBottom: ringSize < 560 ? "10px" : "16px",
               }}
             >
               <a
                 href={hero.ctaPrimary.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#050409] hover:bg-[#1F4633] text-[#F7F1DB] text-xs font-bold uppercase tracking-[0.16em] transition-all duration-200 shadow-sm hover:shadow active:scale-95 flex items-center gap-2"
+                className="group px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-[#050409] hover:bg-[#1F4633] text-[#F7F1DB] text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em] transition-all duration-200 shadow-sm hover:shadow active:scale-95 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap"
               >
                 <span>{hero.ctaPrimary.label}</span>
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -260,7 +261,7 @@ export function Hero() {
 
               <a
                 href={hero.ctaSecondary.href}
-                className="text-xs font-bold uppercase tracking-[0.16em] text-[#050409] hover:text-[#1F4633] transition-colors py-1 underline underline-offset-4 decoration-[#050409]/30 hover:decoration-[#1F4633]"
+                className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em] text-[#050409] hover:text-[#1F4633] transition-colors py-1 underline underline-offset-4 decoration-[#050409]/30 hover:decoration-[#1F4633] whitespace-nowrap"
               >
                 {hero.ctaSecondary.label}
               </a>
