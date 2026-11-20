@@ -14,13 +14,11 @@ export function SelectedWork() {
 
   // Take the 6 featured projects for Section 5
   const featuredProjects = projects.filter((p) => p.featured).slice(0, 6);
-  const totalCount = projects.length; // Dynamic count computed from project data
-  const showingCount = featuredProjects.length;
 
   return (
     <section
       id="work"
-      className="relative w-full py-28 px-6 sm:px-10 overflow-hidden bg-gradient-to-b from-[#F7F1DB] via-[#F1ECD5] to-[#E6E4C6]"
+      className="relative w-full pt-24 sm:pt-28 pb-20 sm:pb-24 px-6 sm:px-10 overflow-hidden bg-gradient-to-b from-[#F7F1DB] via-[#F1ECD5] to-[#FAF6E8]"
     >
       {/* 1. Seamless Gradient & Dotted Grid Canvas */}
       <div className="absolute inset-0 pointer-events-none">
@@ -68,28 +66,8 @@ export function SelectedWork() {
           ))}
         </div>
 
-        {/* 3. "See More" and dynamic total count with visual progress bar indicator */}
-        <div className="mt-16 flex flex-col items-center justify-center text-center">
-          {/* Dynamic count label: computed from data */}
-          <div className="text-xs font-semibold tracking-wider text-[#050409]/70 mb-3">
-            Showing {showingCount} of {totalCount}+ projects
-          </div>
-
-          {/* Thin segmented progress bar: 6 filled segments out of faded row */}
-          <div className="flex items-center gap-1.5 mb-6 w-48 max-w-full">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className={`h-1.5 flex-1 rounded-full transition-colors ${
-                  i < showingCount
-                    ? "bg-[#1F4633]"
-                    : "bg-[#050409]/10"
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* "View all projects" pill button linking to /work page */}
+        {/* 3. Centered "View all projects" button with exactly ~40px of spacing */}
+        <div className="mt-10 flex items-center justify-center text-center">
           <Link
             href="/work"
             className="group px-7 py-3 rounded-full bg-[#050409] hover:bg-[#1F4633] text-[#F7F1DB] text-xs font-bold uppercase tracking-[0.16em] transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center gap-2 active:scale-95"
