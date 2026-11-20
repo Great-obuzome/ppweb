@@ -114,6 +114,9 @@ export interface PortfolioContent {
   services: {
     eyebrow: string;
     heading: string;
+    description: string;
+    allServicesLabel: string;
+    allServicesUrl: string;
     items: ServiceItem[];
   };
   process: {
@@ -406,8 +409,12 @@ export const siteContent: PortfolioContent = {
 
   // Section 3: Services
   services: {
-    eyebrow: "SERVICES",
-    heading: "From cold list to booked meeting.",
+    eyebrow: "Services",
+    heading: "FROM COLD LIST TO BOOKED MEETING.",
+    description:
+      "Clay, n8n and AI systems that find, enrich and reach your ideal buyers, so your pipeline fills without the manual work.",
+    allServicesLabel: "All services",
+    allServicesUrl: "https://fiverr.com/upbynature", // TODO: Replace with your actual services / Fiverr profile URL
     items: [
       {
         id: "enrichment",
