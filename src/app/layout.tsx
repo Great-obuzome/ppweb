@@ -16,6 +16,16 @@ export const metadata: Metadata = {
   title: "UPBYNATURE — Daniel | GTM Engineer & Outbound Automation",
   description:
     "GTM engineer building lead generation, enrichment, and outbound automation systems for startups, agencies, and small businesses using Clay, n8n, AI agents, and custom workflows.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/manifest.json",
   keywords: [
     "GTM engineer",
     "Clay enrichment",

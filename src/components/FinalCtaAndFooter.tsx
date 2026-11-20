@@ -59,15 +59,33 @@ export function FinalCtaAndFooter() {
       {/* FOOTER (Dark #050409) */}
       <div className="w-full bg-[#050409] text-[#F7F1DB] py-14 px-6 border-t border-[#F7F1DB]/10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Brand Wordmark & Tagline */}
+          {/* Brand Lockup [Icon] [UPBYNATURE] & Tagline */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <Link
               href="/"
-              className="text-base font-bold tracking-[0.25em] uppercase text-[#F7F1DB] hover:text-[#1F4633] transition-colors"
+              className="inline-flex items-center gap-3.5 group"
             >
-              {brand.name}
+              {/* Interlocking Serif Monogram Icon (Cream on Dark) */}
+              <span
+                className="w-[33px] h-[44px] flex-shrink-0 transition-colors duration-200"
+                style={{
+                  backgroundColor: "#F7F1DB",
+                  WebkitMaskImage: "url(/images/monogram-mask.png)",
+                  maskImage: "url(/images/monogram-mask.png)",
+                  WebkitMaskSize: "contain",
+                  maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  maskPosition: "center",
+                }}
+                aria-hidden="true"
+              />
+              <span className="text-base font-bold tracking-[0.25em] uppercase text-[#F7F1DB] group-hover:text-white transition-colors">
+                {brand.name}
+              </span>
             </Link>
-            <span className="text-xs text-[#F7F1DB]/50 mt-1 font-medium">
+            <span className="text-xs text-[#F7F1DB]/50 mt-1.5 font-medium">
               {brand.tagline} • Built by {brand.creator}
             </span>
           </div>

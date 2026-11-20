@@ -108,17 +108,37 @@ export function Navbar() {
       <header className="fixed top-0 left-0 right-0 z-50 w-full pt-4 pb-3 sm:pt-5 sm:pb-3 pointer-events-none transition-colors duration-200">
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 flex items-center justify-between select-none">
           
-          {/* Left: Brand Wordmark (adapts contrast smoothly when over dark sections) */}
-          <div className="flex-1 pointer-events-auto">
+          {/* Left: Brand Lockup [Icon] [UPBYNATURE] */}
+          <div className="flex-1 pointer-events-auto flex items-center">
             <Link
               href="/"
-              className={`text-base sm:text-lg font-bold tracking-[0.25em] uppercase transition-colors duration-200 ${
-                isDark
-                  ? "text-[#F7F1DB] hover:text-white"
-                  : "text-[#050409] hover:text-[#1F4633]"
-              }`}
+              className="inline-flex items-center gap-3 sm:gap-3.5 group"
             >
-              {brand.name}
+              {/* Interlocking Serif Monogram Icon */}
+              <span
+                className="w-[25px] h-[34px] sm:w-[30px] sm:h-[40px] flex-shrink-0 transition-colors duration-200"
+                style={{
+                  backgroundColor: isDark ? "#F7F1DB" : "#1F4633",
+                  WebkitMaskImage: "url(/images/monogram-mask.png)",
+                  maskImage: "url(/images/monogram-mask.png)",
+                  WebkitMaskSize: "contain",
+                  maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  maskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                  maskPosition: "center",
+                }}
+                aria-hidden="true"
+              />
+              <span
+                className={`text-base sm:text-lg font-bold tracking-[0.25em] uppercase transition-colors duration-200 ${
+                  isDark
+                    ? "text-[#F7F1DB] group-hover:text-white"
+                    : "text-[#050409] group-hover:text-[#1F4633]"
+                }`}
+              >
+                {brand.name}
+              </span>
             </Link>
           </div>
 
