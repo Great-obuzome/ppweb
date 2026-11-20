@@ -419,7 +419,7 @@ export const siteContent: PortfolioContent = {
           "Automated deep company research and AI summary points",
           "Clean, deduplicated CRM sync directly into HubSpot or Salesforce",
         ],
-        tools: ["Clay", "Claude", "OpenAI", "Apollo.io"],
+        tools: ["clay", "claude", "openai", "apollo"],
       },
       {
         id: "list-building",
@@ -431,7 +431,7 @@ export const siteContent: PortfolioContent = {
           "Account scoring matrix based on intent & technology adoption",
           "Always-fresh weekly programmatic lead replenishment",
         ],
-        tools: ["LinkedIn Sales Navigator", "Apollo.io", "Google Sheets", "Metabase"],
+        tools: ["linkedin-sales-nav", "apollo", "google-sheets", "metabase"],
       },
       {
         id: "cold-outbound",
@@ -443,7 +443,7 @@ export const siteContent: PortfolioContent = {
           "99% inbox placement with smart rotation and gradual warmup",
           "Multi-channel sequences with tailored AI email personalization",
         ],
-        tools: ["Instantly.ai", "Smartlead", "HubSpot", "Zapier"],
+        tools: ["instantly", "smartlead", "hubspot", "zapier"],
       },
       {
         id: "workflow-ai",
@@ -455,7 +455,7 @@ export const siteContent: PortfolioContent = {
           "Self-driving reply handling agents powered by Claude 3.5 Sonnet",
           "Custom multi-step webhooks syncing pipeline metrics to dashboards",
         ],
-        tools: ["n8n", "Claude", "Make.com", "Slack"],
+        tools: ["n8n", "claude", "make", "slack"],
       },
     ],
   },
