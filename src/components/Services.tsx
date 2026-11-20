@@ -43,18 +43,27 @@ export function Services() {
         {services.items.map((service: ServiceItem, idx: number) => (
           <div
             key={service.id}
-            className="group relative rounded-[20px] p-8 border border-[#1F4633]/10 shadow-sm transition-all duration-300 hover:border-[#1F4633]/35 hover:-translate-y-1 hover:shadow-md motion-reduce:transform-none flex flex-col justify-between overflow-hidden"
+            className="group relative rounded-[20px] p-8 border border-[#1F4633]/15 shadow-sm transition-all duration-300 hover:border-[#1F4633]/40 hover:-translate-y-1 hover:shadow-lg motion-reduce:transform-none flex flex-col justify-between overflow-hidden"
             style={{
               background:
-                "linear-gradient(160deg, #FFFEFA 0%, #FBF9F3 55%, #EEF0E0 100%)",
+                "linear-gradient(155deg, #FFFFFF 0%, #FAF8EE 35%, #E3E9D5 100%)",
             }}
           >
             {/* Soft radial highlight in the top-right corner for depth */}
             <div
-              className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none"
+              className="absolute -top-10 -right-10 w-56 h-56 rounded-full pointer-events-none"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 70%)",
+                  "radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%)",
+              }}
+              aria-hidden="true"
+            />
+            {/* Subtle bottom-right green glow accent */}
+            <div
+              className="absolute -bottom-14 -right-14 w-60 h-60 rounded-full pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(31, 70, 51, 0.12) 0%, rgba(31, 70, 51, 0) 70%)",
               }}
               aria-hidden="true"
             />
