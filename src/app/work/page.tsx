@@ -152,6 +152,8 @@ export default function WorkLibraryPage() {
       {/* Case Study Detail Modal */}
       <CaseStudyModal
         project={selectedProject}
+        projectsList={filteredProjects}
+        onSelectProject={setSelectedProject}
         onClose={() => setSelectedProject(null)}
       />
 

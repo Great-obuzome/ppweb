@@ -9,13 +9,29 @@ import { ArrowUpRight, Workflow } from "lucide-react";
 interface ProjectCardProps {
   project: ProjectItem;
   onOpenModal: (project: ProjectItem) => void;
+  isOpening?: boolean;
 }
 
-export function ProjectCard({ project, onOpenModal }: ProjectCardProps) {
+export function ProjectCard({ project, onOpenModal, isOpening }: ProjectCardProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onOpenModal(project);
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      data-project-slug={project.slug}
       onClick={() => onOpenModal(project)}
-      className="group cursor-pointer bg-[#050409] text-[#F7F1DB] rounded-[24px] p-3 sm:p-3.5 border border-[#F7F1DB]/[0.08] flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#1F4633] hover:shadow-[0_12px_30px_rgba(31,70,51,0.22)] motion-reduce:transform-none select-none"
+      onKeyDown={handleKeyDown}
+      aria-haspopup="dialog"
+      aria-label={`View case study: ${project.title}`}
+      className={`group cursor-pointer bg-[#050409] text-[#F7F1DB] rounded-[24px] p-3 sm:p-3.5 border border-[#F7F1DB]/[0.08] flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#1F4633] hover:shadow-[0_12px_30px_rgba(31,70,51,0.22)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4633] motion-reduce:transform-none select-none ${
+        isOpening ? "opacity-30 pointer-events-none" : "opacity-100"
+      }`}
     >
       <div>
         {/* Top Thumbnail: 16:10 ratio, 16px inner radius, subtle bottom gradient overlay */}

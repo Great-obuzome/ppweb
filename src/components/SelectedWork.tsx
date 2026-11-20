@@ -81,6 +81,8 @@ export function SelectedWork() {
       {/* Case Study Detail Modal */}
       <CaseStudyModal
         project={selectedProject}
+        projectsList={featuredProjects}
+        onSelectProject={setSelectedProject}
         onClose={() => setSelectedProject(null)}
       />
     </section>
