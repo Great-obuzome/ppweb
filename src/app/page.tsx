@@ -4,6 +4,7 @@ import { WorkingWith } from "@/components/WorkingWith";
 import { Services } from "@/components/Services";
 import { Replay } from "@/components/Replay";
 import { HowIWork } from "@/components/HowIWork";
+import { TryItDemo } from "@/components/TryItDemo";
 import { SelectedWork } from "@/components/SelectedWork";
 import { About } from "@/components/About";
 import { Testimonials } from "@/components/Testimonials";
@@ -28,6 +29,9 @@ export default function Home() {
 
         {/* SECTION 4: How I Work (Process) */}
         <HowIWork />
+
+        {/* SECTION 4.5: Try It Demo (Waterfall Enrichment) */}
+        <TryItDemo />
 
         {/* SECTION 5: Selected Work */}
         <SelectedWork />
