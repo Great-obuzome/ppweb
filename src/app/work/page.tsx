@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { FinalCtaAndFooter } from "@/components/FinalCtaAndFooter";
 import { projects, ProjectItem } from "@/data/projects";
+import { siteContent } from "@/data/content";
 import { ProjectCard } from "@/components/ProjectCard";
 import { CaseStudyModal } from "@/components/CaseStudyModal";
-import { SplitHeading } from "@/components/SplitHeading";
-import { ArrowLeft, Search, Filter } from "lucide-react";
+import { SectionHeader } from "@/components/SectionHeader";
+import { Search, Filter } from "lucide-react";
 
 type CategoryFilter = "All" | "Clay" | "n8n" | "Outbound" | "AI Agents" | "Dashboards";
 
@@ -42,35 +42,16 @@ export default function WorkLibraryPage() {
       <Navbar />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 sm:px-10 pt-32 pb-24">
-        {/* Back to Home Link */}
-        <div className="mb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#050409]/70 hover:text-[#1F4633] transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to home</span>
-          </Link>
-        </div>
-
-        {/* Page Header */}
-        <div className="mb-12">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#1F4633]" />
-            <span className="text-xs font-bold tracking-[0.24em] uppercase text-[#1F4633]">
-              PROJECT LIBRARY
-            </span>
-          </div>
-          <SplitHeading
-            as="h1"
-            lead="All"
-            accent="Projects"
-            className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4"
-          />
-          <p className="text-sm sm:text-base text-[#050409]/75 max-w-2xl font-normal leading-relaxed">
-            Explore the complete directory of lead generation, waterfall enrichment, and outbound automation systems.
-          </p>
-        </div>
+        {/* Unified Section Header */}
+        <SectionHeader
+          as="h1"
+          eyebrow={siteContent.workPage.eyebrow}
+          split={siteContent.workPage.heading}
+          description={siteContent.workPage.description}
+          buttonLabel={siteContent.workPage.buttonLabel}
+          buttonUrl={siteContent.workPage.buttonUrl}
+          bottomSpacing="mb-8"
+        />
 
         {/* Filter Chips & Search Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 pb-6 border-b border-[#050409]/10">

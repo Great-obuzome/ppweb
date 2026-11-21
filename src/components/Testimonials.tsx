@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { siteContent, TestimonialItem } from "@/data/content";
-import { SplitHeading } from "./SplitHeading";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { SectionHeader } from "./SectionHeader";
 
 export function Testimonials() {
   const { testimonials } = siteContent;
@@ -19,39 +19,32 @@ export function Testimonials() {
 
   return (
     <section className="py-24 px-6 max-w-6xl mx-auto overflow-hidden">
-      {/* Header with Navigation Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#1F4633]" />
-            <span className="text-xs font-bold tracking-[0.24em] uppercase text-[#1F4633]">
-              {testimonials.eyebrow}
-            </span>
+      {/* Reusable SectionHeader with Carousel Navigation Controls in rightChildren */}
+      <SectionHeader
+        eyebrow={testimonials.eyebrow}
+        split={testimonials.heading}
+        description={testimonials.description}
+        buttonLabel=""
+        buttonUrl=""
+        rightChildren={
+          <div className="flex items-center gap-3">
+            <button
+              onClick={prev}
+              aria-label="Previous testimonial"
+              className="w-11 h-11 rounded-full border border-[#1F4633]/20 bg-white flex items-center justify-center text-[#050409] hover:bg-[#1F4633] hover:text-[#F7F1DB] transition-colors shadow-xs active:scale-95"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next testimonial"
+              className="w-11 h-11 rounded-full border border-[#1F4633]/20 bg-white flex items-center justify-center text-[#050409] hover:bg-[#1F4633] hover:text-[#F7F1DB] transition-colors shadow-xs active:scale-95"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
-          <SplitHeading
-            split={testimonials.heading}
-            className="text-3xl sm:text-5xl font-extrabold tracking-tight"
-          />
-        </div>
-
-        {/* Carousel buttons */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={prev}
-            aria-label="Previous testimonial"
-            className="w-11 h-11 rounded-full border border-[#1F4633]/20 bg-white flex items-center justify-center text-[#050409] hover:bg-[#1F4633] hover:text-[#F7F1DB] transition-colors shadow-xs active:scale-95"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={next}
-            aria-label="Next testimonial"
-            className="w-11 h-11 rounded-full border border-[#1F4633]/20 bg-white flex items-center justify-center text-[#050409] hover:bg-[#1F4633] hover:text-[#F7F1DB] transition-colors shadow-xs active:scale-95"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Testimonials Grid / Carousel View */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

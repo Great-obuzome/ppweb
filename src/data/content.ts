@@ -127,12 +127,18 @@ export interface PortfolioContent {
   process: {
     eyebrow: string;
     heading: SplitText | string;
+    description: string;
+    buttonLabel: string;
+    buttonUrl: string;
     steps: StepItem[];
   };
   caseStudies: {
     eyebrow: string;
     heading: SplitText | string;
     subheading: string;
+    description?: string;
+    buttonLabel?: string;
+    buttonUrl?: string;
     items: CaseStudyItem[];
   };
   about: {
@@ -149,7 +155,17 @@ export interface PortfolioContent {
   testimonials: {
     eyebrow: string;
     heading: SplitText | string;
+    description?: string;
+    buttonLabel?: string;
+    buttonUrl?: string;
     items: TestimonialItem[];
+  };
+  workPage: {
+    eyebrow: string;
+    heading: SplitText;
+    description: string;
+    buttonLabel: string;
+    buttonUrl: string;
   };
   finalCta: {
     heading: SplitText | string;
@@ -493,11 +509,14 @@ export const siteContent: PortfolioContent = {
 
   // Section 4: How I Work (Horizontal timeline)
   process: {
-    eyebrow: "PROCESS",
+    eyebrow: "Process",
     heading: {
-      lead: "How I",
-      accent: "Work",
+      lead: "HOW I",
+      accent: "WORK.",
     },
+    description: "A simple, repeatable process from first call to a pipeline that runs on its own.",
+    buttonLabel: "Book a call",
+    buttonUrl: "https://calendly.com/upbynature/discovery-call",
     steps: [
       {
         step: "01",
@@ -524,12 +543,15 @@ export const siteContent: PortfolioContent = {
 
   // Section 5: Selected Work
   caseStudies: {
-    eyebrow: "SELECTED WORK",
+    eyebrow: "Selected work",
     heading: {
-      lead: "Proven systems.",
-      accent: "Measurable revenue.",
+      lead: "PROVEN SYSTEMS.",
+      accent: "MEASURABLE REVENUE.",
     },
     subheading: "Real client architectures engineered for high-intent B2B conversion.",
+    description: "A look at the systems I build, from enrichment workflows to outbound setups.",
+    buttonLabel: "All projects",
+    buttonUrl: "/work",
     items: [
       {
         id: "cs-1",
@@ -572,7 +594,7 @@ export const siteContent: PortfolioContent = {
 
   // Section 6: About
   about: {
-    eyebrow: "ABOUT",
+    eyebrow: "About",
     heading: {
       lead: "Hi, I'm",
       accent: "Daniel.",
@@ -592,11 +614,14 @@ export const siteContent: PortfolioContent = {
 
   // Section 7: Testimonials
   testimonials: {
-    eyebrow: "TESTIMONIALS",
+    eyebrow: "Testimonials",
     heading: {
-      lead: "Trusted by founders",
-      accent: "and growth leaders.",
+      lead: "TRUSTED BY FOUNDERS",
+      accent: "AND GROWTH LEADERS.",
     },
+    description: "What clients say about working together.",
+    buttonLabel: "",
+    buttonUrl: "",
     items: [
       {
         id: "test-1",
@@ -626,6 +651,18 @@ export const siteContent: PortfolioContent = {
         isPlaceholderTodo: true,
       },
     ],
+  },
+
+  // Work Page Header
+  workPage: {
+    eyebrow: "All projects",
+    heading: {
+      lead: "EVERY PROJECT,",
+      accent: "IN ONE PLACE.",
+    },
+    description: "Filter by platform or search by keyword to explore all custom outbound workflows, enrichment systems and AI automations.",
+    buttonLabel: "Back to home",
+    buttonUrl: "/",
   },
 
   // Section 8: Final CTA + Footer

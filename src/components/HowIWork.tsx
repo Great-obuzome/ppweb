@@ -2,7 +2,7 @@
 
 import React from "react";
 import { siteContent, StepItem } from "@/data/content";
-import { SplitHeading } from "./SplitHeading";
+import { SectionHeader } from "./SectionHeader";
 
 export function HowIWork() {
   const { process } = siteContent;
@@ -10,19 +10,14 @@ export function HowIWork() {
   return (
     <section id="process" className="py-24 px-6 bg-[#FAF6E8] border-y border-[#1F4633]/10">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-16">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-[#1F4633]" />
-            <span className="text-xs font-bold tracking-[0.24em] uppercase text-[#1F4633]">
-              {process.eyebrow}
-            </span>
-          </div>
-          <SplitHeading
-            split={process.heading}
-            className="text-3xl sm:text-5xl font-extrabold tracking-tight"
-          />
-        </div>
+        {/* Reusable SectionHeader */}
+        <SectionHeader
+          eyebrow={process.eyebrow}
+          split={process.heading}
+          description={process.description}
+          buttonLabel={process.buttonLabel}
+          buttonUrl={process.buttonUrl}
+        />
 
         {/* 4-step horizontal timeline */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">

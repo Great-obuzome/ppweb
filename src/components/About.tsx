@@ -49,10 +49,10 @@ export function About() {
 
           {/* Right Column: Eyebrow, Heading, Bio, Stats, and Discovery CTA */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
-            {/* Eyebrow: "ABOUT" in small, wide-spaced caps */}
-            <div className="inline-flex items-center gap-2 mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#1F4633]" />
-              <span className="text-xs font-bold tracking-[0.24em] uppercase text-[#1F4633]">
+            {/* Eyebrow: 40px line, 14px gap, sentence case */}
+            <div className="inline-flex items-center gap-[14px] mb-5">
+              <span className="w-[40px] h-[1px] bg-[#1F4633] block shrink-0" aria-hidden="true" />
+              <span className="text-[15px] sm:text-[16px] font-normal tracking-normal text-[#050409]/80">
                 {about.eyebrow}
               </span>
             </div>
