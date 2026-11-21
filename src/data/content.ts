@@ -25,12 +25,21 @@ export interface ClientItem {
   logoUrl?: string;
 }
 
-export interface ServiceItem {
-  id: string;
+export interface ServiceCapability {
   title: string;
   description: string;
-  outcomes: string[];
+}
+
+export interface ServiceItem {
+  id: string;
+  badge?: string;
+  title: string;
+  description: string;
+  outcomes?: string[];
+  capabilities?: ServiceCapability[];
   tools: string[];
+  linkText?: string;
+  linkUrl?: string;
 }
 
 export interface StepItem {
@@ -458,50 +467,68 @@ export const siteContent: PortfolioContent = {
     items: [
       {
         id: "enrichment",
+        badge: "THE CORE",
         title: "Lead enrichment and GTM research with Clay",
         description:
-          "Multi-provider waterfall enrichment that hunts for hard-to-find mobile numbers, verified work emails, hiring triggers, tech stack installations, and funding rounds.",
-        outcomes: [
-          "85%+ email verification accuracy using waterfall providers",
-          "Automated deep company research and AI summary points",
-          "Clean, deduplicated CRM sync directly into HubSpot or Salesforce",
+          "Multi-provider waterfall workflows that consolidate verified contact details, intent signals, and deep account research into one unified record.",
+        linkText: "See how it works",
+        linkUrl: "#work",
+        capabilities: [
+          {
+            title: "Waterfall enrichment",
+            description: "Multiple data providers, one clean record.",
+          },
+          {
+            title: "Email verification",
+            description: "Verified work emails before anything is sent.",
+          },
+          {
+            title: "Phone and signal data",
+            description: "Mobile numbers and buying signals when they exist.",
+          },
+          {
+            title: "AI research",
+            description: "Company summaries and personalization points.",
+          },
+          {
+            title: "ICP scoring",
+            description: "Rank accounts by fit and intent.",
+          },
+          {
+            title: "CRM sync",
+            description: "Deduplicated records pushed into HubSpot or Salesforce.",
+          },
         ],
         tools: ["clay", "claude", "openai", "apollo"],
       },
       {
         id: "list-building",
+        badge: "LEADS",
         title: "B2B lead list building",
         description:
-          "Precision TAM definition and hyper-targeted lead scraping combining job boards, social signals, intent feeds, and executive movements so you reach buyers at their moment of need.",
-        outcomes: [
-          "Zero-bloat Ideal Customer Profile (ICP) segmenting",
-          "Account scoring matrix based on intent & technology adoption",
-          "Always-fresh weekly programmatic lead replenishment",
-        ],
+          "Targeted TAM curation using executive job movements, hiring intent, and technographic triggers to identify active in-market buyers.",
+        linkText: "Learn more",
+        linkUrl: "#contact",
         tools: ["linkedin-sales-nav", "apollo", "google-sheets", "metabase"],
       },
       {
         id: "cold-outbound",
+        badge: "OUTBOUND",
         title: "Cold outbound launch (domains, sequences, deliverability)",
         description:
-          "Full infrastructure buildout with secondary domains, Google Workspace/Outlook inboxes, SPF/DKIM/DMARC configurations, automated warmups, and conversion-engineered copy sequences.",
-        outcomes: [
-          "100% primary domain reputation protection with dedicated secondary setups",
-          "99% inbox placement with smart rotation and gradual warmup",
-          "Multi-channel sequences with tailored AI email personalization",
-        ],
+          "Dedicated secondary domain setups with mailbox rotation, warmup schedules, and strict technical authentication to protect your primary domain.",
+        linkText: "Learn more",
+        linkUrl: "#contact",
         tools: ["instantly", "smartlead", "hubspot", "zapier"],
       },
       {
         id: "workflow-ai",
+        badge: "AUTOMATION",
         title: "Workflow and AI agent automation with n8n and Claude",
         description:
-          "Custom orchestration connecting your marketing, sales, and analytics tools. We build autonomous AI agents that qualify inbound replies, categorize objections, and book meetings directly into your calendar.",
-        outcomes: [
-          "Automated sentiment classification & instant Slack notifications",
-          "Self-driving reply handling agents powered by Claude 3.5 Sonnet",
-          "Custom multi-step webhooks syncing pipeline metrics to dashboards",
-        ],
+          "Custom webhook orchestration connecting marketing and CRM databases with AI agents that classify sentiment and route qualified leads.",
+        linkText: "Learn more",
+        linkUrl: "#contact",
         tools: ["n8n", "claude", "make", "slack"],
       },
     ],
