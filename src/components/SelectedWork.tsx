@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { siteContent } from "@/data/content";
 import { projects, ProjectItem } from "@/data/projects";
 import { ProjectCard } from "./ProjectCard";
+import { FeaturedCaseStudyCard } from "./FeaturedCaseStudyCard";
 import { CaseStudyModal } from "./CaseStudyModal";
 import { SectionHeader } from "./SectionHeader";
 
@@ -44,6 +45,9 @@ export function SelectedWork() {
           buttonLabel={caseStudies.buttonLabel}
           buttonUrl={caseStudies.buttonUrl}
         />
+
+        {/* Featured Case Study Card (full-width above the 6-card grid) */}
+        <FeaturedCaseStudyCard />
 
         {/* 2. Cards with Thumbnails Grid: 3 columns x 2 rows (6 cards) on desktop, 2 on tablet, 1 on mobile */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
