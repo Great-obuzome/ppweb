@@ -81,6 +81,25 @@ export interface SplitText {
   accent: string;
 }
 
+export interface ContactChannel {
+  name: string;
+  handle: string;
+  url: string;
+  type: 'email' | 'whatsapp' | 'linkedin' | 'x' | 'fiverr' | 'upwork' | 'discord';
+  description?: string;
+  isPlaceholderTodo?: boolean;
+}
+
+export interface ContactContent {
+  eyebrow: string;
+  heading: SplitText | string;
+  description: string;
+  buttonLabel: string;
+  buttonUrl: string;
+  channels: ContactChannel[];
+  needsOptions: string[];
+}
+
 export interface PortfolioContent {
   brand: {
     name: string;
@@ -182,6 +201,7 @@ export interface PortfolioContent {
     ctaPrimary: { label: string; href: string };
     emailLabel: string;
   };
+  contact: ContactContent;
 }
 
 export const siteContent: PortfolioContent = {
@@ -692,7 +712,7 @@ export const siteContent: PortfolioContent = {
     buttonUrl: "/",
   },
 
-  // Section 8: Final CTA + Footer
+  // Section 8: Final CTA
   finalCta: {
     heading: {
       lead: "Ready to turn your outbound",
@@ -702,5 +722,81 @@ export const siteContent: PortfolioContent = {
       "Stop wasting hours on manual prospecting and burned domains. Let's engineer an automated, scalable pipeline that books qualified meetings while you sleep.",
     ctaPrimary: { label: "Book a free discovery call", href: "https://calendly.com/upbynature/discovery-call" },
     emailLabel: "daniel@upbynature.com",
+  },
+
+  // Section 9: Contact
+  contact: {
+    eyebrow: "Contact",
+    heading: {
+      lead: "CALLS TO MAKE? ",
+      accent: "LET'S TALK.",
+    },
+    description: "Send a message, or book a time directly.",
+    buttonLabel: "Book a call",
+    buttonUrl: "https://calendly.com/upbynature/discovery-call", // TODO: Replace with your actual Calendly / Cal.com link
+    channels: [
+      {
+        name: "Email",
+        handle: "daniel@upbynature.com", // TODO: Replace with your actual contact email
+        url: "mailto:daniel@upbynature.com", // TODO: Replace with your actual contact email
+        type: "email",
+        description: "Direct inbox — replies within 24 hours",
+      },
+      {
+        name: "WhatsApp",
+        handle: "+1 (555) 019-2834", // TODO: Replace with your actual WhatsApp business number
+        url: "https://wa.me/15550192834", // TODO: Replace with your actual WhatsApp link
+        type: "whatsapp",
+        description: "Quick chat & voice notes",
+        isPlaceholderTodo: true,
+      },
+      {
+        name: "LinkedIn",
+        handle: "daniel-gtm", // TODO: Replace with your LinkedIn profile
+        url: "https://linkedin.com/in/daniel-gtm", // TODO: Replace with your LinkedIn URL
+        type: "linkedin",
+        description: "Connect & direct message",
+        isPlaceholderTodo: true,
+      },
+      {
+        name: "X",
+        handle: "@upbynature", // TODO: Replace with your X handle
+        url: "https://x.com/upbynature", // TODO: Replace with your X URL
+        type: "x",
+        description: "Build updates & DMs",
+        isPlaceholderTodo: true,
+      },
+      {
+        name: "Fiverr",
+        handle: "upbynature", // TODO: Replace with your Fiverr profile
+        url: "https://fiverr.com/upbynature", // TODO: Replace with your Fiverr profile URL
+        type: "fiverr",
+        description: "Escrow orders & verified reviews",
+        isPlaceholderTodo: true,
+      },
+      {
+        name: "Upwork",
+        handle: "daniel-upbynature", // TODO: Replace with your Upwork profile URL
+        url: "https://www.upwork.com/freelancers/~TODO", // TODO: Replace with your Upwork profile URL
+        type: "upwork",
+        description: "Enterprise contracts & milestones",
+        isPlaceholderTodo: true,
+      },
+      {
+        name: "Discord",
+        handle: "upbynature#0001", // TODO: Replace with your Discord username / server link
+        url: "https://discord.gg/TODO", // TODO: Replace with your Discord server or user invite
+        type: "discord",
+        description: "Community & async chat",
+        isPlaceholderTodo: true,
+      },
+    ],
+    needsOptions: [
+      "Clay enrichment and research",
+      "B2B lead lists",
+      "Cold outbound launch",
+      "n8n workflow or AI agent",
+      "Not sure yet",
+    ],
   },
 };
