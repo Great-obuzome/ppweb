@@ -245,6 +245,13 @@ export const siteContent: PortfolioContent = {
         caption: "Let's connect",
         accessibleLabel: "Daniel on LinkedIn",
       },
+      {
+        name: "X",
+        logo: "/platforms/x.svg",
+        url: "https://x.com/upbynature", // TODO: Replace with real X profile URL
+        caption: "Follow along",
+        accessibleLabel: "Daniel on X (formerly Twitter)",
+      },
     ],
 
     // Client mode placeholder list for future use
