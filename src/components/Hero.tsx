@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { siteContent, ToolItem } from "@/data/content";
 import { ToolIcon } from "./ToolIcon";
 import { WorkflowCanvas } from "./WorkflowCanvas";
+import { LiveHeroCard } from "./LiveHeroCard";
 import { ArrowUpRight } from "lucide-react";
 
 const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
@@ -163,7 +164,10 @@ export function Hero() {
             <div
               className="absolute inset-0 rounded-full pointer-events-auto"
               style={{
-                animation: rotationReady ? "orbitRotate 90s linear infinite" : "none",
+                animationName: rotationReady ? "orbitRotate" : "none",
+                animationDuration: "90s",
+                animationTimingFunction: "linear",
+                animationIterationCount: "infinite",
                 animationPlayState: isPaused ? "paused" : "running",
               }}
             >
@@ -202,7 +206,10 @@ export function Hero() {
                     {/* Counter-rotation keeps logos upright */}
                     <div
                       style={{
-                        animation: rotationReady ? "orbitCounterRotate 90s linear infinite" : "none",
+                        animationName: rotationReady ? "orbitCounterRotate" : "none",
+                        animationDuration: "90s",
+                        animationTimingFunction: "linear",
+                        animationIterationCount: "infinite",
                         animationPlayState: isPaused ? "paused" : "running",
                       }}
                     >
@@ -516,6 +523,11 @@ export function Hero() {
           </span>
         </div>
       </motion.div>
+
+      {/* Lower-left Live Hero Card (desktop only: 1280px+, >40px clearance from ring) */}
+      <div className="hidden min-[1280px]:block absolute left-6 xl:left-12 bottom-7 z-20 pointer-events-auto">
+        <LiveHeroCard />
+      </div>
 
       {/* Orbit and Float Animations */}
       <style jsx global>{`

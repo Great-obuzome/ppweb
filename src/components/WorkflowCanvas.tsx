@@ -156,8 +156,11 @@ export function WorkflowCanvas() {
       </motion.div>
 
       {/* 3. Workflow Node Cards (900ms onward, 800ms duration, 100ms stagger) */}
+      {/* Node-2 in lower-left is hidden to leave clear space for the Live Hero Card */}
       <div className="hidden xl:block absolute inset-0">
-        {nodes.map((node, index) => (
+        {nodes
+          .filter((node) => node.id !== "node-2")
+          .map((node, index) => (
           <motion.div
             key={node.id}
             className="absolute -translate-x-1/2 -translate-y-1/2 hover:opacity-75 transition-opacity duration-300"
