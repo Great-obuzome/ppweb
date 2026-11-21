@@ -6,6 +6,7 @@ import { siteContent, ToolItem } from "@/data/content";
 import { ToolIcon } from "./ToolIcon";
 import { WorkflowCanvas } from "./WorkflowCanvas";
 import { LiveHeroCard } from "./LiveHeroCard";
+import { DraggableRingTile } from "./DraggableRingTile";
 import { ArrowUpRight } from "lucide-react";
 
 const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
@@ -16,11 +17,26 @@ export function Hero() {
   const [isPaused, setIsPaused] = useState(false);
   const [rotationReady, setRotationReady] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [hasDragged, setHasDragged] = useState(false);
+  const [isDraggingTile, setIsDraggingTile] = useState(false);
+  const hoveredToolRef = useRef<string | null>(null);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [ringSize, setRingSize] = useState(640);
   const containerRef = useRef<HTMLDivElement>(null);
   const textBlockRef = useRef<HTMLDivElement>(null);
   const [contentScale, setContentScale] = useState(1);
+
+  // Check if pointer is released inside the central text safe zone (triggers immediate snap back)
+  const checkInsideSafeZone = (clientX: number, clientY: number) => {
+    if (!textBlockRef.current) return false;
+    const rect = textBlockRef.current.getBoundingClientRect();
+    return (
+      clientX >= rect.left - 20 &&
+      clientX <= rect.right + 20 &&
+      clientY >= rect.top - 20 &&
+      clientY <= rect.bottom + 20
+    );
+  };
 
   // Start the ring's rotation only after the last tile lands (~1.35s - 1.4s)
   useEffect(() => {
@@ -162,7 +178,7 @@ export function Hero() {
 
             {/* Rotating Circle Orbit Layer (90s linear infinite, starts after last tile lands at 1.4s) */}
             <div
-              className="absolute inset-0 rounded-full pointer-events-auto"
+              className="absolute inset-0 rounded-full pointer-events-none"
               style={{
                 animationName: rotationReady ? "orbitRotate" : "none",
                 animationDuration: "90s",
@@ -188,66 +204,41 @@ export function Hero() {
                 const tileDelay = 0.30 + orderRank * 0.04;
 
                 return (
-                  <div
+                  <DraggableRingTile
                     key={tool.id}
-                    className="absolute top-1/2 left-1/2 flex items-center justify-center"
-                    style={{
-                      transform: `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`,
+                    tool={tool}
+                    index={index}
+                    x={x}
+                    y={y}
+                    sizePx={sizePx}
+                    tileDelay={tileDelay}
+                    rotationReady={rotationReady}
+                    isPaused={isPaused}
+                    shouldReduceMotion={Boolean(shouldReduceMotion)}
+                    activeTooltip={activeTooltip}
+                    onTileHover={(hovered, toolName) => {
+                      hoveredToolRef.current = toolName;
+                      if (!isDraggingTile) {
+                        setIsPaused(hovered);
+                        setActiveTooltip(toolName);
+                      }
                     }}
-                    onMouseEnter={() => {
+                    onTileDragStart={() => {
+                      setIsDraggingTile(true);
                       setIsPaused(true);
-                      setActiveTooltip(tool.name);
-                    }}
-                    onMouseLeave={() => {
-                      setIsPaused(false);
+                      setHasDragged(true);
                       setActiveTooltip(null);
                     }}
-                  >
-                    {/* Counter-rotation keeps logos upright */}
-                    <div
-                      style={{
-                        animationName: rotationReady ? "orbitCounterRotate" : "none",
-                        animationDuration: "90s",
-                        animationTimingFunction: "linear",
-                        animationIterationCount: "infinite",
-                        animationPlayState: isPaused ? "paused" : "running",
-                      }}
-                    >
-                      {/* Entry animation: scale 0.6 -> 1, opacity 0 -> 1 */}
-                      <motion.div
-                        initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.6 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{
-                          duration: shouldReduceMotion ? 0.2 : 0.45,
-                          delay: shouldReduceMotion ? 0 : tileDelay,
-                          ease: EASE_OUT_EXPO,
-                        }}
-                        suppressHydrationWarning
-                      >
-                        {/* Gentle staggered floating animation */}
-                        <div
-                          className="group relative cursor-pointer"
-                          style={{
-                            animation: `toolFloat 4s ease-in-out infinite ${index * 0.25}s`,
-                          }}
-                        >
-                          <div
-                            style={{ width: `${sizePx}px`, height: `${sizePx}px` }}
-                            className="bg-white rounded-2xl p-2.5 shadow-sm border border-[#050409]/8 flex items-center justify-center transition-all duration-200 group-hover:scale-125 group-hover:shadow-xl group-hover:border-[#1F4633]/30 group-hover:z-30"
-                          >
-                            <ToolIcon id={tool.id} className="w-6 h-6 object-contain" />
-                          </div>
-
-                          {/* Tooltip on hover */}
-                          {activeTooltip === tool.name && (
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-[#050409] text-[#F7F1DB] text-[11px] font-semibold tracking-wider uppercase rounded-md shadow-lg pointer-events-none whitespace-nowrap z-40 animate-in fade-in zoom-in-95 duration-150">
-                              {tool.name}
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
+                    onTileDragEnd={() => {
+                      setIsDraggingTile(false);
+                      setTimeout(() => {
+                        if (!hoveredToolRef.current) {
+                          setIsPaused(false);
+                        }
+                      }, 400);
+                    }}
+                    checkInsideSafeZone={checkInsideSafeZone}
+                  />
                 );
               })}
             </div>
@@ -436,6 +427,27 @@ export function Hero() {
                 ))}
               </div>
             </motion.div>
+
+            {/* Desktop-only hint pill: "Give them a push" (fades after first drag) */}
+            <div className="hidden md:flex justify-center mt-2.5 h-6">
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={
+                  hasDragged
+                    ? { opacity: 0, y: -4, pointerEvents: "none" }
+                    : { opacity: 0.85, y: 0 }
+                }
+                transition={{
+                  duration: hasDragged ? 0.35 : 0.6,
+                  delay: hasDragged ? 0 : 1.1,
+                  ease: EASE_OUT_EXPO,
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/80 backdrop-blur-xs border border-[#1F4633]/20 text-[10px] font-semibold tracking-wide text-[#1F4633] shadow-2xs select-none"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1F4633] animate-pulse" />
+                <span>Give them a push</span>
+              </motion.div>
+            </div>
 
           </div>
 
