@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { WorkingWith } from "@/components/WorkingWith";
 import { Services } from "@/components/Services";
+import { Replay } from "@/components/Replay";
 import { HowIWork } from "@/components/HowIWork";
 import { SelectedWork } from "@/components/SelectedWork";
 import { About } from "@/components/About";
@@ -22,7 +23,10 @@ export default function Home() {
         {/* SECTION 3: Services */}
         <Services />
 
-        {/* SECTION 4: How I Work */}
+        {/* SECTION 3.5: Replay (How it runs) */}
+        <Replay />
+
+        {/* SECTION 4: How I Work (Process) */}
         <HowIWork />
 
         {/* SECTION 5: Selected Work */}
