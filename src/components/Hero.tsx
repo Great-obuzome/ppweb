@@ -12,21 +12,19 @@ export function Hero() {
   const [isPaused, setIsPaused] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
-  const [ringSize, setRingSize] = useState(640);
+  const [ringSize, setRingSize] = useState(800);
   const containerRef = useRef<HTMLDivElement>(null);
   const textBlockRef = useRef<HTMLDivElement>(null);
   const [contentScale, setContentScale] = useState(1);
 
-  // Responsive single square dimension: --ring: clamp(520px, min(62vw, 86vh), 780px)
-  // Scale down gracefully on shorter screens (down to 640px) to prevent clipping navbar (~75px) & works-with (~55px)
+  // Responsive single square dimension: --ring: clamp(680px, min(56vw, 880px), 880px)
+  // At 1440px wide: 1440 * 0.56 = 806.4px (~800px).
+  // Perfect circle, does not shrink to fit viewport height.
   useEffect(() => {
     const handleResize = () => {
       const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const computed = Math.min(vw * 0.62, vh * 0.86);
-      const maxVerticalFit = vh - 116; // navbar ~72px + worksWith ~36px + 8px padding
-      const target = Math.min(computed, maxVerticalFit > 520 ? maxVerticalFit : Math.max(520, maxVerticalFit));
-      const clamped = Math.max(520, Math.min(target, 780));
+      const computed = Math.min(vw * 0.56, 880);
+      const clamped = Math.max(680, computed);
       setRingSize(clamped);
     };
 
@@ -35,19 +33,23 @@ export function Hero() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Bounding-box collision check: ensure text block sits strictly within safe radius (R - tileSize/2 - 24px)
+  // Bounding-box collision check: ensure text block sits strictly within safe radius
+  // with at least 48px clearance to the nearest tile at every size.
   useEffect(() => {
     if (!textBlockRef.current) return;
     const rect = textBlockRef.current.getBoundingClientRect();
-    const radius = (ringSize - 58) / 2;
-    const safeRadius = radius - 29 - 24; // inner edge minus 24px clearance
+    const baseRadius = (ringSize - 60) / 2;
+    // Inner edge of tile is at (baseRadius - 32px).
+    // Safe radius requires at least 48px between the text and the nearest tile.
+    const safeRadius = baseRadius - 32 - 48;
     const halfH = rect.height / 2;
     const halfW = rect.width / 2;
     const cornerDist = Math.sqrt(halfW * halfW + halfH * halfH);
 
     if (cornerDist > safeRadius || halfH > safeRadius - 10) {
-      const neededScale = (safeRadius - 8) / Math.max(halfH + 10, cornerDist);
-      const target = Math.max(0.78, Number(neededScale.toFixed(2)));
+      const neededScale = safeRadius / Math.max(halfH + 10, cornerDist);
+      // Reduce text scale by up to 10% (down to 0.90 max)
+      const target = Math.max(0.90, Number(neededScale.toFixed(2)));
       setContentScale((prev) => (Math.abs(prev - target) > 0.02 ? target : prev));
     } else {
       setContentScale((prev) => (prev !== 1 ? 1 : prev));
@@ -67,35 +69,38 @@ export function Hero() {
     setMouseOffset({ x: 0, y: 0 });
   };
 
-  // Color-alternated list of 16 tools around the ring
+  // Color-alternated list of 18 tools around the ring
+  // No two similar colors side by side, and no duplicate tool placed next to each other
   const orderedToolIds = [
-    "clay", // Purple / Indigo
-    "hubspot", // Orange
-    "instantly", // Electric Blue
-    "claude", // Terracotta
-    "salesforce", // Light Blue
-    "zapier", // Vermilion
-    "n8n", // Coral / Pink
-    "google-sheets", // Green
-    "smartlead", // Violet
-    "apollo", // Yellow / Black
-    "make", // Purple
-    "slack", // 4-color mark
-    "metabase", // Cyan / Blue
-    "openai", // Black
-    "linkedin-sales-nav", // Royal Blue
-    "notion", // Black
+    "clay", // 0: Indigo/Purple (#4F46E5)
+    "hubspot", // 1: Orange (#FF7A59)
+    "salesforce", // 2: Sky Blue (#00A1E0)
+    "claude", // 3: Terracotta/Warm Coral (#D97757)
+    "google-sheets", // 4: Green (#34A853)
+    "instantly", // 5: Electric Blue (#3B82F6)
+    "zapier", // 6: Bright Orange (#FF4F00)
+    "notion", // 7: Monochrome/Black (#000000)
+    "n8n", // 8: Magenta/Pink (#EA4B71)
+    "apollo", // 9: Bright Yellow (#FFE600)
+    "make", // 10: Deep Violet (#6D00CC)
+    "metabase", // 11: Cyan/Light Blue (#509EE3)
+    "openai", // 12: Black (#000000)
+    "slack", // 13: Plum/Multi (#4A154B)
+    "linkedin-sales-nav", // 14: Royal Blue (#0A66C2)
+    "smartlead", // 15: Violet/Indigo (#6366F1)
+    "google-sheets", // 16: Green (#34A853)
+    "hubspot", // 17: Orange (#FF7A59)
   ];
 
   const ringTools: ToolItem[] = orderedToolIds
     .map((id) => tools.find((t) => t.id === id))
     .filter((t): t is ToolItem => Boolean(t));
 
-  const totalTiles = ringTools.length;
+  const totalTiles = ringTools.length; // 18
 
   // Single circle radius: R = (ringSize - averageTileSize) / 2
-  // With tileSize ~58px, R sits exactly on the track
-  const baseTileSize = 58;
+  // With tileSize ~60px, R sits exactly on the track
+  const baseTileSize = 60;
   const radius = (ringSize - baseTileSize) / 2;
 
   return (
@@ -104,7 +109,8 @@ export function Hero() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        minHeight: "calc(100vh - 5rem)",
+        minHeight: `calc(${ringSize}px + 220px)`,
+        paddingTop: "32px",
       }}
       className="relative w-full flex flex-col justify-between items-center px-4 sm:px-6 select-none bg-[#F7F1DB] overflow-hidden"
     >
@@ -151,16 +157,16 @@ export function Hero() {
                 const angleDeg = (index / totalTiles) * 360;
                 const angleRad = (angleDeg * Math.PI) / 180;
 
-                // PERFECT CIRCLE: R * cos(a), R * sin(a)
-                const x = radius * Math.cos(angleRad);
-                const y = radius * Math.sin(angleRad);
+                // PERFECT CIRCLE: R * cos(a), R * sin(a) rounded to 2 decimal places to prevent SSR hydration precision mismatch
+                const x = Math.round(radius * Math.cos(angleRad) * 100) / 100;
+                const y = Math.round(radius * Math.sin(angleRad) * 100) / 100;
 
-                // Small size variation: 54px, 58px, 62px
-                const sizePx = 54 + (index % 3) * 4;
+                // Small size variation: 56px, 60px, 64px (within 56-66px specification)
+                const sizePx = 56 + (index % 3) * 4;
 
                 return (
                   <div
-                    key={tool.id}
+                    key={`${tool.id}-${index}`}
                     className="absolute top-1/2 left-1/2 flex items-center justify-center"
                     style={{
                       transform: `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`,
@@ -209,7 +215,7 @@ export function Hero() {
             </div>
           </div>
 
-          {/* CENTER TEXT BLOCK: Scaled to fit safely inside the ring radius */}
+          {/* CENTER TEXT BLOCK: Scaled to fit safely inside the ring radius with >=48px clearance */}
           <div
             ref={textBlockRef}
             className="relative z-10 text-center flex flex-col items-center px-4"
@@ -218,70 +224,85 @@ export function Hero() {
               transformOrigin: "center center",
             }}
           >
-            {/* Main Headline (Scaled dynamically relative to ring size: calc(ring * 0.078)) */}
-            <SplitHeading
-              as="h1"
-              lead={typeof hero.headline === "object" ? hero.headline.lead : "I build the systems that"}
-              accent={typeof hero.headline === "object" ? hero.headline.accent : "fill your pipeline."}
-              className="font-extrabold tracking-tight leading-[1.12]"
-              style={{
-                fontSize: `clamp(24px, ${ringSize * 0.076}px, 50px)`,
-                maxWidth: `min(${ringSize * 0.72}px, 500px)`,
-                marginBottom: ringSize < 560 ? "8px" : "14px",
-              }}
-              enableMotion={false}
-            />
+            {/* Main Headline: font-size calc(ring * 0.082) (44px - 72px) on desktop, exactly two lines on desktop, max-width calc(ring * 0.74) */}
+            <h1
+              className="font-extrabold tracking-tight leading-[1.08] [text-wrap:balance] select-none text-[clamp(36px,10vw,48px)] md:text-[var(--hero-font-size)] max-w-full md:max-w-[var(--hero-max-w)] mb-6"
+              style={
+                {
+                  "--hero-font-size": `clamp(44px, ${ringSize * 0.082}px, 72px)`,
+                  "--hero-max-w": `${ringSize * 0.74}px`,
+                } as React.CSSProperties
+              }
+            >
+              <span className="md:block text-[#050409]">I build the systems</span>{" "}
+              <span className="md:block">
+                <span className="text-[#050409]">that </span>
+                <span
+                  style={{
+                    backgroundImage: "linear-gradient(90deg, #1F4633 0%, #2F6B4C 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "#1F4633",
+                    WebkitBoxDecorationBreak: "clone",
+                    boxDecorationBreak: "clone",
+                  }}
+                >
+                  fill your pipeline.
+                </span>
+              </span>
+            </h1>
 
-            {/* Sub-line (Max-width calc(ring * 0.56), muted dark text) */}
+            {/* Sub-line: 18-20px (calc(ring * 0.024)) on desktop, 16-17px on mobile, line-height 1.6, max-width calc(ring * 0.58), #050409 at 70% */}
             <p
-              className="text-[#050409]/75 font-normal leading-relaxed tracking-tight"
-              style={{
-                fontSize: `clamp(12px, ${ringSize * 0.022}px, 15px)`,
-                maxWidth: `${ringSize * 0.54}px`,
-                marginBottom: ringSize < 560 ? "12px" : "18px",
-              }}
+              className="font-normal leading-[1.6] tracking-tight text-[#050409]/70 text-[16px] sm:text-[17px] md:text-[var(--hero-sub-size)] max-w-full md:max-w-[var(--hero-sub-max-w)] mb-8"
+              style={
+                {
+                  "--hero-sub-size": `clamp(18px, ${ringSize * 0.024}px, 20px)`,
+                  "--hero-sub-max-w": `${ringSize * 0.58}px`,
+                } as React.CSSProperties
+              }
             >
               GTM engineer. Clay, n8n, AI agents and outbound automation for startups and agencies.
             </p>
 
-            {/* CTAs: Primary Dark Pill Button + "See my work" Link */}
+            {/* CTAs: Primary Pill Button (56px tall, 32px px, 15px text) + "See my work" Link (15px) with 20px gap */}
             <div
-              className="flex flex-row items-center justify-center gap-2.5 sm:gap-4"
+              className="flex flex-row items-center justify-center gap-5"
               style={{
-                marginBottom: ringSize < 560 ? "10px" : "16px",
+                marginBottom: "28px",
               }}
             >
               <a
                 href={hero.ctaPrimary.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-[#050409] hover:bg-[#1F4633] text-[#F7F1DB] text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em] transition-all duration-200 shadow-sm hover:shadow active:scale-95 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap"
+                className="group h-[56px] px-8 rounded-full bg-[#050409] hover:bg-[#1F4633] text-[#F7F1DB] text-[15px] font-bold uppercase tracking-[0.14em] transition-all duration-200 shadow-sm hover:shadow active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <span>{hero.ctaPrimary.label}</span>
-                <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
 
               <a
                 href={hero.ctaSecondary.href}
-                className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em] text-[#050409] hover:text-[#1F4633] transition-colors py-1 underline underline-offset-4 decoration-[#050409]/30 hover:decoration-[#1F4633] whitespace-nowrap"
+                className="text-[15px] font-bold uppercase tracking-[0.14em] text-[#050409] hover:text-[#1F4633] transition-colors py-2 underline underline-offset-4 decoration-[#050409]/30 hover:decoration-[#1F4633] whitespace-nowrap"
               >
                 {hero.ctaSecondary.label}
               </a>
             </div>
 
-            {/* "Built with" Row (with official full-color logos on white badges) */}
-            <div className="flex items-center justify-center gap-2 text-xs text-[#050409]/70 font-medium">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[#050409]/80">
+            {/* "Built with" Row: label 13px, chips 24px, 14px padding inside pill */}
+            <div className="flex items-center justify-center gap-2.5 text-xs text-[#050409]/70 font-medium select-none">
+              <span className="text-[13px] font-semibold uppercase tracking-wider text-[#050409]/80">
                 {hero.builtWithLabel}
               </span>
-              <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-xs border border-[#050409]/10 px-2.5 py-1 rounded-full shadow-2xs">
+              <div className="flex items-center gap-2 bg-white/90 backdrop-blur-xs border border-[#050409]/10 px-[14px] py-1.5 rounded-full shadow-2xs">
                 {hero.featuredTools.map((toolId) => (
                   <div
                     key={toolId}
                     title={toolId.toUpperCase()}
-                    className="w-4.5 h-4.5 rounded-md flex items-center justify-center p-0.5 hover:scale-115 transition-transform cursor-pointer"
+                    className="w-6 h-6 rounded-md flex items-center justify-center p-0.5 hover:scale-115 transition-transform cursor-pointer"
                   >
-                    <ToolIcon id={toolId} className="w-3.5 h-3.5 object-contain" />
+                    <ToolIcon id={toolId} className="w-4.5 h-4.5 object-contain" />
                   </div>
                 ))}
               </div>
@@ -293,12 +314,12 @@ export function Hero() {
 
       </div>
 
-      {/* MOBILE (below 768px): Two slow horizontal marquee rows above and below */}
+      {/* MOBILE (below 768px): Two slow horizontal marquee rows with all 18 tools */}
       <div className="md:hidden w-full my-6 overflow-hidden space-y-3 z-10">
         {/* Row 1 */}
         <div className="relative flex overflow-x-hidden">
           <div className="animate-marquee flex items-center gap-3 py-1">
-            {[...ringTools.slice(0, 8), ...ringTools.slice(0, 8)].map((tool, idx) => (
+            {[...ringTools.slice(0, 9), ...ringTools.slice(0, 9)].map((tool, idx) => (
               <div
                 key={`mob-1-${tool.id}-${idx}`}
                 className="w-13 h-13 bg-white rounded-2xl shadow-xs border border-[#050409]/8 flex items-center justify-center flex-shrink-0 p-2"
@@ -319,7 +340,7 @@ export function Hero() {
               animation: "marquee 42s linear infinite reverse",
             }}
           >
-            {[...ringTools.slice(8, 16), ...ringTools.slice(8, 16)].map((tool, idx) => (
+            {[...ringTools.slice(9, 18), ...ringTools.slice(9, 18)].map((tool, idx) => (
               <div
                 key={`mob-2-${tool.id}-${idx}`}
                 className="w-13 h-13 bg-white rounded-2xl shadow-xs border border-[#050409]/8 flex items-center justify-center flex-shrink-0 p-2"

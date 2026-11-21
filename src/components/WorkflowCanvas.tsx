@@ -15,44 +15,44 @@ interface NodeItem {
 }
 
 export function WorkflowCanvas() {
-  // Strategic workflow nodes placed well away from the center ring (in the far margins and corners)
+  // Strategic workflow nodes placed in far margins (outer 4-5%) clear of the 800-880px ring
   const nodes: NodeItem[] = [
     {
       id: "node-1",
       label: "Trigger: Inbound / ICP Signal",
       type: "Webhook Trigger",
-      x: 7,
-      y: 18,
+      x: 4,
+      y: 20,
       icon: <Play className="w-3.5 h-3.5 text-[#1F4633]" />,
       statusColor: "#10B981",
       driftDelay: 0,
     },
     {
       id: "node-2",
-      label: "Enrich: Multi-source Waterfall",
-      type: "Clay Waterfall",
-      x: 10,
-      y: 78,
-      icon: <Database className="w-3.5 h-3.5 text-[#4F46E5]" />,
-      statusColor: "#3B82F6",
-      driftDelay: 1.2,
-    },
-    {
-      id: "node-3",
       label: "Filter & Dedupe",
       type: "Validation Node",
-      x: 6,
-      y: 48,
+      x: 5,
+      y: 50,
       icon: <Filter className="w-3.5 h-3.5 text-[#050409]" />,
       statusColor: "#10B981",
       driftDelay: 2.1,
     },
     {
+      id: "node-3",
+      label: "Enrich: Multi-source Waterfall",
+      type: "Clay Waterfall",
+      x: 4,
+      y: 80,
+      icon: <Database className="w-3.5 h-3.5 text-[#4F46E5]" />,
+      statusColor: "#3B82F6",
+      driftDelay: 1.2,
+    },
+    {
       id: "node-4",
       label: "Score & Rank",
       type: "Intent Scoring",
-      x: 91,
-      y: 18,
+      x: 96,
+      y: 20,
       icon: <UserCheck className="w-3.5 h-3.5 text-[#D97757]" />,
       statusColor: "#10B981",
       driftDelay: 0.8,
@@ -61,7 +61,7 @@ export function WorkflowCanvas() {
       id: "node-5",
       label: "Personalize with LLM",
       type: "Claude Agent",
-      x: 92,
+      x: 95,
       y: 50,
       icon: <Sparkles className="w-3.5 h-3.5 text-[#D97757]" />,
       statusColor: "#F59E0B",
@@ -71,7 +71,7 @@ export function WorkflowCanvas() {
       id: "node-6",
       label: "Send & Rotate Inboxes",
       type: "Smartlead / Instantly",
-      x: 88,
+      x: 96,
       y: 80,
       icon: <Send className="w-3.5 h-3.5 text-[#3B82F6]" />,
       statusColor: "#10B981",
@@ -113,7 +113,7 @@ export function WorkflowCanvas() {
 
         {/* Path left margin */}
         <path
-          d="M 100 120 C 60 200, 50 240, 80 290 C 110 370, 90 420, 110 470"
+          d="M 50 120 C 30 200, 20 260, 40 300 C 60 380, 30 430, 45 480"
           fill="none"
           stroke="url(#flow-line-grad)"
           strokeWidth="1.5"
@@ -122,7 +122,7 @@ export function WorkflowCanvas() {
 
         {/* Path right margin */}
         <path
-          d="M 910 120 C 940 200, 930 260, 910 300 C 890 380, 880 430, 890 480"
+          d="M 950 120 C 970 200, 980 260, 960 300 C 940 380, 970 430, 955 480"
           fill="none"
           stroke="url(#flow-line-grad)"
           strokeWidth="1.5"
@@ -131,15 +131,15 @@ export function WorkflowCanvas() {
 
         {/* Traveling Flow Pulse Dots */}
         <circle r="3" fill="#1F4633" filter="url(#glow)" className="motion-safe:animate-flow-dot">
-          <animateMotion dur="7s" repeatCount="indefinite" path="M 100 120 C 60 200, 50 240, 80 290 C 110 370, 90 420, 110 470" />
+          <animateMotion dur="7s" repeatCount="indefinite" path="M 50 120 C 30 200, 20 260, 40 300 C 60 380, 30 430, 45 480" />
         </circle>
         <circle r="3" fill="#1F4633" filter="url(#glow)" className="motion-safe:animate-flow-dot">
-          <animateMotion dur="6s" repeatCount="indefinite" path="M 910 120 C 940 200, 930 260, 910 300 C 890 380, 880 430, 890 480" />
+          <animateMotion dur="6s" repeatCount="indefinite" path="M 950 120 C 970 200, 980 260, 960 300 C 940 380, 970 430, 955 480" />
         </circle>
       </svg>
 
-      {/* 3. Workflow Node Cards (Positioned in wide left/right margins outside the ring) */}
-      <div className="hidden xl:block absolute inset-0">
+      {/* 3. Workflow Node Cards (Positioned in wide left/right margins outside the ring, hidden below 1280px) */}
+      <div className="hidden min-[1280px]:block absolute inset-0">
         {nodes.map((node) => (
           <div
             key={node.id}
@@ -172,7 +172,7 @@ export function WorkflowCanvas() {
       </div>
 
       {/* Radial Gradient Mask: Fades out completely toward the center ring */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_550px_at_50%_50%,rgba(247,241,219,0.95)_0%,rgba(247,241,219,0.3)_60%,transparent_100%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_680px_at_50%_50%,rgba(247,241,219,0.95)_0%,rgba(247,241,219,0.3)_60%,transparent_100%)] pointer-events-none" />
 
       {/* Drift animations */}
       <style jsx global>{`
