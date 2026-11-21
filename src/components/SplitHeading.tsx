@@ -15,6 +15,8 @@ export interface SplitHeadingProps {
   enableMotion?: boolean;
 }
 
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
+
 export function SplitHeading({
   lead: rawLead,
   accent: rawAccent,
@@ -85,7 +87,7 @@ export function SplitHeading({
   const isMotionActive = enableMotion && !shouldReduceMotion;
 
   return (
-    <Component className={className} style={style}>
+    <Component className={className} style={style} suppressHydrationWarning>
       {isMotionActive ? (
         <>
           <motion.span
@@ -93,7 +95,8 @@ export function SplitHeading({
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+            suppressHydrationWarning
           >
             {cleanLead}
           </motion.span>
@@ -105,10 +108,11 @@ export function SplitHeading({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{
-              duration: 0.45,
+              duration: 0.5,
               delay: 0.12,
-              ease: [0.21, 0.47, 0.32, 0.98],
+              ease: EASE_OUT_EXPO,
             }}
+            suppressHydrationWarning
           >
             {cleanAccent}
           </motion.span>

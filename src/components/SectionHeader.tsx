@@ -7,6 +7,8 @@ import { ArrowRight } from "lucide-react";
 import { SplitHeading } from "./SplitHeading";
 import { SplitText } from "@/data/content";
 
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
+
 export interface SectionHeaderProps {
   eyebrow: string;
   lead?: string;
@@ -80,9 +82,10 @@ export function SectionHeader({
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
               style={{ transformOrigin: "left" }}
               aria-hidden="true"
+              suppressHydrationWarning
             />
           ) : (
             <span
@@ -99,10 +102,11 @@ export function SectionHeader({
               className={`text-[15px] sm:text-[16px] font-normal tracking-normal ${
                 isDark ? "text-[#F7F1DB]/80" : "text-[#050409]/80"
               }`}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: 0.05, ease: "easeOut" }}
+              transition={{ duration: 0.45, delay: 0.06, ease: EASE_OUT_EXPO }}
+              suppressHydrationWarning
             >
               {eyebrow}
             </motion.span>
@@ -137,7 +141,7 @@ export function SectionHeader({
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.25, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 0.5, delay: 0.16, ease: EASE_OUT_EXPO }}
           >
             {description && (
               <p

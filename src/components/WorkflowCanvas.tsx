@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Database, Filter, Sparkles, Send, CheckCircle2, UserCheck, Play } from "lucide-react";
+
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
 
 interface NodeItem {
   id: string;
@@ -15,6 +18,8 @@ interface NodeItem {
 }
 
 export function WorkflowCanvas() {
+  const shouldReduceMotion = useReducedMotion();
+
   // Strategic workflow nodes placed well away from the center ring (in the far margins and corners)
   const nodes: NodeItem[] = [
     {
@@ -81,74 +86,94 @@ export function WorkflowCanvas() {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {/* 1. Subtle dotted grid canvas on cream (dots at ~6% opacity) */}
-      <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="n8n-grid-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.2" fill="#050409" fillOpacity="0.07" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#n8n-grid-dots)" />
-      </svg>
-
-      {/* 2. Node Graph Connections: Thin curved bezier lines in far outer margins */}
-      <svg
-        className="absolute inset-0 w-full h-full opacity-30"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1000 600"
-        preserveAspectRatio="none"
+      {/* 1. Subtle dotted grid canvas on cream (dots at ~6% opacity) & lines with page-load fade */}
+      <motion.div
+        className="absolute inset-0 w-full h-full"
+        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: shouldReduceMotion ? 0.2 : 0.8,
+          delay: shouldReduceMotion ? 0 : 0.8,
+          ease: EASE_OUT_EXPO,
+        }}
+        suppressHydrationWarning
       >
-        <defs>
-          <linearGradient id="flow-line-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1F4633" stopOpacity="0.35" />
-            <stop offset="50%" stopColor="#1F4633" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#1F4633" stopOpacity="0.35" />
-          </linearGradient>
+        <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="n8n-grid-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.2" fill="#050409" fillOpacity="0.07" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#n8n-grid-dots)" />
+        </svg>
 
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
+        {/* 2. Node Graph Connections: Thin curved bezier lines in far outer margins */}
+        <svg
+          className="absolute inset-0 w-full h-full opacity-30"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1000 600"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="flow-line-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#1F4633" stopOpacity="0.35" />
+              <stop offset="50%" stopColor="#1F4633" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#1F4633" stopOpacity="0.35" />
+            </linearGradient>
 
-        {/* Path left margin */}
-        <path
-          d="M 100 120 C 60 200, 50 240, 80 290 C 110 370, 90 420, 110 470"
-          fill="none"
-          stroke="url(#flow-line-grad)"
-          strokeWidth="1.5"
-          strokeDasharray="4 4"
-        />
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
 
-        {/* Path right margin */}
-        <path
-          d="M 910 120 C 940 200, 930 260, 910 300 C 890 380, 880 430, 890 480"
-          fill="none"
-          stroke="url(#flow-line-grad)"
-          strokeWidth="1.5"
-          strokeDasharray="4 4"
-        />
+          {/* Path left margin */}
+          <path
+            d="M 100 120 C 60 200, 50 240, 80 290 C 110 370, 90 420, 110 470"
+            fill="none"
+            stroke="url(#flow-line-grad)"
+            strokeWidth="1.5"
+            strokeDasharray="4 4"
+          />
 
-        {/* Traveling Flow Pulse Dots */}
-        <circle r="3" fill="#1F4633" filter="url(#glow)" className="motion-safe:animate-flow-dot">
-          <animateMotion dur="7s" repeatCount="indefinite" path="M 100 120 C 60 200, 50 240, 80 290 C 110 370, 90 420, 110 470" />
-        </circle>
-        <circle r="3" fill="#1F4633" filter="url(#glow)" className="motion-safe:animate-flow-dot">
-          <animateMotion dur="6s" repeatCount="indefinite" path="M 910 120 C 940 200, 930 260, 910 300 C 890 380, 880 430, 890 480" />
-        </circle>
-      </svg>
+          {/* Path right margin */}
+          <path
+            d="M 910 120 C 940 200, 930 260, 910 300 C 890 380, 880 430, 890 480"
+            fill="none"
+            stroke="url(#flow-line-grad)"
+            strokeWidth="1.5"
+            strokeDasharray="4 4"
+          />
 
-      {/* 3. Workflow Node Cards (Positioned in wide left/right margins outside the ring) */}
+          {/* Traveling Flow Pulse Dots */}
+          <circle r="3" fill="#1F4633" filter="url(#glow)" className="motion-safe:animate-flow-dot">
+            <animateMotion dur="7s" repeatCount="indefinite" path="M 100 120 C 60 200, 50 240, 80 290 C 110 370, 90 420, 110 470" />
+          </circle>
+          <circle r="3" fill="#1F4633" filter="url(#glow)" className="motion-safe:animate-flow-dot">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M 910 120 C 940 200, 930 260, 910 300 C 890 380, 880 430, 890 480" />
+          </circle>
+        </svg>
+      </motion.div>
+
+      {/* 3. Workflow Node Cards (900ms onward, 800ms duration, 100ms stagger) */}
       <div className="hidden xl:block absolute inset-0">
-        {nodes.map((node) => (
-          <div
+        {nodes.map((node, index) => (
+          <motion.div
             key={node.id}
-            className="absolute -translate-x-1/2 -translate-y-1/2 opacity-35 hover:opacity-75 transition-opacity duration-300"
+            className="absolute -translate-x-1/2 -translate-y-1/2 hover:opacity-75 transition-opacity duration-300"
             style={{
               left: `${node.x}%`,
               top: `${node.y}%`,
               animation: `nodeDrift 8s ease-in-out infinite alternate ${node.driftDelay}s`,
             }}
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.85 }}
+            animate={shouldReduceMotion ? { opacity: 0.35 } : { opacity: 0.35, scale: 1 }}
+            transition={{
+              duration: shouldReduceMotion ? 0.2 : 0.8,
+              delay: shouldReduceMotion ? 0 : 0.9 + index * 0.1,
+              ease: EASE_OUT_EXPO,
+            }}
+            suppressHydrationWarning
           >
             <div className="bg-white/90 backdrop-blur-xs rounded-xl px-3 py-2 border border-[#1F4633]/20 shadow-xs flex items-center gap-2.5 min-w-[145px]">
               <div className="w-5 h-5 rounded-md bg-[#F7F1DB] flex items-center justify-center p-0.5 flex-shrink-0">
@@ -167,7 +192,7 @@ export function WorkflowCanvas() {
                 style={{ backgroundColor: node.statusColor }}
               />
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 

@@ -1,21 +1,33 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useId } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteContent, ToolItem } from "@/data/content";
 import { ToolIcon } from "./ToolIcon";
 import { WorkflowCanvas } from "./WorkflowCanvas";
-import { SplitHeading } from "./SplitHeading";
 import { ArrowUpRight } from "lucide-react";
+
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const { hero, tools } = siteContent;
+  const shouldReduceMotion = useReducedMotion();
   const [isPaused, setIsPaused] = useState(false);
+  const [rotationReady, setRotationReady] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [ringSize, setRingSize] = useState(640);
   const containerRef = useRef<HTMLDivElement>(null);
   const textBlockRef = useRef<HTMLDivElement>(null);
   const [contentScale, setContentScale] = useState(1);
+
+  // Start the ring's rotation only after the last tile lands (~1.35s - 1.4s)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRotationReady(true);
+    }, 1400);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Responsive single square dimension: --ring: clamp(520px, min(62vw, 86vh), 780px)
   // Scale down gracefully on shorter screens (down to 640px) to prevent clipping navbar (~75px) & works-with (~55px)
@@ -130,20 +142,28 @@ export function Hero() {
             }}
           >
             {/* Subtle guide orbit track (perfect circle, border-radius: 50%, aspect-ratio: 1) */}
-            <div
+            <motion.div
               className="absolute inset-0 rounded-full border border-[#1F4633]/12 pointer-events-none"
               style={{
                 width: "100%",
                 height: "100%",
                 aspectRatio: "1 / 1",
               }}
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                duration: shouldReduceMotion ? 0.2 : 0.6,
+                delay: shouldReduceMotion ? 0 : 0.3,
+                ease: EASE_OUT_EXPO,
+              }}
+              suppressHydrationWarning
             />
 
-            {/* Rotating Circle Orbit Layer (90s linear infinite) */}
+            {/* Rotating Circle Orbit Layer (90s linear infinite, starts after last tile lands at 1.4s) */}
             <div
               className="absolute inset-0 rounded-full pointer-events-auto"
               style={{
-                animation: "orbitRotate 90s linear infinite",
+                animation: rotationReady ? "orbitRotate 90s linear infinite" : "none",
                 animationPlayState: isPaused ? "paused" : "running",
               }}
             >
@@ -157,6 +177,11 @@ export function Hero() {
 
                 // Small size variation: 54px, 58px, 62px
                 const sizePx = 54 + (index % 3) * 4;
+
+                // 300ms onward: scale from 0.6 to 1 and fade in, 40ms stagger clockwise from top
+                const angleClockwiseFromTop = (angleDeg + 90) % 360;
+                const orderRank = Math.round(angleClockwiseFromTop / (360 / totalTiles));
+                const tileDelay = 0.30 + orderRank * 0.04;
 
                 return (
                   <div
@@ -177,31 +202,43 @@ export function Hero() {
                     {/* Counter-rotation keeps logos upright */}
                     <div
                       style={{
-                        animation: "orbitCounterRotate 90s linear infinite",
+                        animation: rotationReady ? "orbitCounterRotate 90s linear infinite" : "none",
                         animationPlayState: isPaused ? "paused" : "running",
                       }}
                     >
-                      {/* Gentle staggered floating animation */}
-                      <div
-                        className="group relative cursor-pointer"
-                        style={{
-                          animation: `toolFloat 4s ease-in-out infinite ${index * 0.25}s`,
+                      {/* Entry animation: scale 0.6 -> 1, opacity 0 -> 1 */}
+                      <motion.div
+                        initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.6 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: shouldReduceMotion ? 0.2 : 0.45,
+                          delay: shouldReduceMotion ? 0 : tileDelay,
+                          ease: EASE_OUT_EXPO,
                         }}
+                        suppressHydrationWarning
                       >
+                        {/* Gentle staggered floating animation */}
                         <div
-                          style={{ width: `${sizePx}px`, height: `${sizePx}px` }}
-                          className="bg-white rounded-2xl p-2.5 shadow-sm border border-[#050409]/8 flex items-center justify-center transition-all duration-200 group-hover:scale-125 group-hover:shadow-xl group-hover:border-[#1F4633]/30 group-hover:z-30"
+                          className="group relative cursor-pointer"
+                          style={{
+                            animation: `toolFloat 4s ease-in-out infinite ${index * 0.25}s`,
+                          }}
                         >
-                          <ToolIcon id={tool.id} className="w-6 h-6 object-contain" />
-                        </div>
-
-                        {/* Tooltip on hover */}
-                        {activeTooltip === tool.name && (
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-[#050409] text-[#F7F1DB] text-[11px] font-semibold tracking-wider uppercase rounded-md shadow-lg pointer-events-none whitespace-nowrap z-40 animate-in fade-in zoom-in-95 duration-150">
-                            {tool.name}
+                          <div
+                            style={{ width: `${sizePx}px`, height: `${sizePx}px` }}
+                            className="bg-white rounded-2xl p-2.5 shadow-sm border border-[#050409]/8 flex items-center justify-center transition-all duration-200 group-hover:scale-125 group-hover:shadow-xl group-hover:border-[#1F4633]/30 group-hover:z-30"
+                          >
+                            <ToolIcon id={tool.id} className="w-6 h-6 object-contain" />
                           </div>
-                        )}
-                      </div>
+
+                          {/* Tooltip on hover */}
+                          {activeTooltip === tool.name && (
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-[#050409] text-[#F7F1DB] text-[11px] font-semibold tracking-wider uppercase rounded-md shadow-lg pointer-events-none whitespace-nowrap z-40 animate-in fade-in zoom-in-95 duration-150">
+                              {tool.name}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
                     </div>
                   </div>
                 );
@@ -218,59 +255,165 @@ export function Hero() {
               transformOrigin: "center center",
             }}
           >
-            {/* Main Headline (Scaled dynamically relative to ring size: calc(ring * 0.078)) */}
-            <SplitHeading
-              as="h1"
-              lead={typeof hero.headline === "object" ? hero.headline.lead : "I build the systems that"}
-              accent={typeof hero.headline === "object" ? hero.headline.accent : "fill your pipeline."}
-              className="font-extrabold tracking-tight leading-[1.12]"
+            {/* Main Headline (150ms: reveals line by line in overflow-hidden mask, 700ms duration, 90ms stagger, two-tone accent phrase follows last) */}
+            <h1
+              className="font-extrabold tracking-tight leading-[1.12] text-center"
               style={{
                 fontSize: `clamp(24px, ${ringSize * 0.076}px, 50px)`,
                 maxWidth: `min(${ringSize * 0.72}px, 500px)`,
                 marginBottom: ringSize < 560 ? "8px" : "14px",
               }}
-              enableMotion={false}
-            />
+            >
+              {/* Line 1: 150ms delay, 700ms duration */}
+              <span className="block overflow-hidden">
+                <motion.span
+                  className="block text-[#050409]"
+                  initial={{ opacity: 0, y: shouldReduceMotion ? 0 : "100%" }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: shouldReduceMotion ? 0.2 : 0.7,
+                    delay: shouldReduceMotion ? 0 : 0.15,
+                    ease: EASE_OUT_EXPO,
+                  }}
+                  suppressHydrationWarning
+                >
+                  I build the systems
+                </motion.span>
+              </span>
 
-            {/* Sub-line (Max-width calc(ring * 0.56), muted dark text) */}
-            <p
+              {/* Line 2: 240ms delay (150ms + 90ms stagger), 700ms duration */}
+              <span className="block overflow-hidden">
+                <motion.span
+                  className="inline-block text-[#050409]"
+                  initial={{ opacity: 0, y: shouldReduceMotion ? 0 : "100%" }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: shouldReduceMotion ? 0.2 : 0.7,
+                    delay: shouldReduceMotion ? 0 : 0.24,
+                    ease: EASE_OUT_EXPO,
+                  }}
+                  suppressHydrationWarning
+                >
+                  that&nbsp;
+                </motion.span>
+                <motion.span
+                  className="inline-block text-[#1F4633]"
+                  style={{
+                    backgroundImage: "linear-gradient(90deg, #1F4633 0%, #2F6B4C 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "#1F4633",
+                  }}
+                  initial={{ opacity: 0, y: shouldReduceMotion ? 0 : "100%" }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: shouldReduceMotion ? 0.2 : 0.7,
+                    delay: shouldReduceMotion ? 0 : 0.24,
+                    ease: EASE_OUT_EXPO,
+                  }}
+                  suppressHydrationWarning
+                >
+                  fill your
+                </motion.span>
+              </span>
+
+              {/* Line 3 (two-tone accent phrase follows last): 330ms delay (240ms + 90ms stagger), 700ms duration */}
+              <span className="block overflow-hidden">
+                <motion.span
+                  className="block text-[#1F4633]"
+                  style={{
+                    backgroundImage: "linear-gradient(90deg, #1F4633 0%, #2F6B4C 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    color: "#1F4633",
+                  }}
+                  initial={{ opacity: 0, y: shouldReduceMotion ? 0 : "100%" }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: shouldReduceMotion ? 0.2 : 0.7,
+                    delay: shouldReduceMotion ? 0 : 0.33,
+                    ease: EASE_OUT_EXPO,
+                  }}
+                  suppressHydrationWarning
+                >
+                  pipeline.
+                </motion.span>
+              </span>
+            </h1>
+
+            {/* Sub-line (450ms: fades up from 20px, 600ms duration) */}
+            <motion.p
               className="text-[#050409]/75 font-normal leading-relaxed tracking-tight"
               style={{
                 fontSize: `clamp(12px, ${ringSize * 0.022}px, 15px)`,
                 maxWidth: `${ringSize * 0.54}px`,
                 marginBottom: ringSize < 560 ? "12px" : "18px",
               }}
+              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: shouldReduceMotion ? 0.2 : 0.6,
+                delay: shouldReduceMotion ? 0 : 0.45,
+                ease: EASE_OUT_EXPO,
+              }}
+              suppressHydrationWarning
             >
-              GTM engineer. Clay, n8n, AI agents and outbound automation for startups and agencies.
-            </p>
+              {hero.subline}
+            </motion.p>
 
-            {/* CTAs: Primary Dark Pill Button + "See my work" Link */}
+            {/* CTAs: Primary Dark Pill Button + "See my work" Link (600ms onward: 600ms duration, 80ms apart) */}
             <div
               className="flex flex-row items-center justify-center gap-2.5 sm:gap-4"
               style={{
                 marginBottom: ringSize < 560 ? "10px" : "16px",
               }}
             >
-              <a
+              <motion.a
                 href={hero.ctaPrimary.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-[#050409] hover:bg-[#1F4633] text-[#F7F1DB] text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em] transition-all duration-200 shadow-sm hover:shadow active:scale-95 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap"
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0.2 : 0.6,
+                  delay: shouldReduceMotion ? 0 : 0.60,
+                  ease: EASE_OUT_EXPO,
+                }}
+                suppressHydrationWarning
               >
                 <span>{hero.ctaPrimary.label}</span>
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
+              </motion.a>
 
-              <a
+              <motion.a
                 href={hero.ctaSecondary.href}
                 className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] sm:tracking-[0.16em] text-[#050409] hover:text-[#1F4633] transition-colors py-1 underline underline-offset-4 decoration-[#050409]/30 hover:decoration-[#1F4633] whitespace-nowrap"
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: shouldReduceMotion ? 0.2 : 0.6,
+                  delay: shouldReduceMotion ? 0 : 0.68,
+                  ease: EASE_OUT_EXPO,
+                }}
+                suppressHydrationWarning
               >
                 {hero.ctaSecondary.label}
-              </a>
+              </motion.a>
             </div>
 
-            {/* "Built with" Row (with official full-color logos on white badges) */}
-            <div className="flex items-center justify-center gap-2 text-xs text-[#050409]/70 font-medium">
+            {/* "Built with" Row (fades up 80ms after button 2: 760ms delay) */}
+            <motion.div
+              className="flex items-center justify-center gap-2 text-xs text-[#050409]/70 font-medium"
+              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: shouldReduceMotion ? 0.2 : 0.6,
+                delay: shouldReduceMotion ? 0 : 0.76,
+                ease: EASE_OUT_EXPO,
+              }}
+              suppressHydrationWarning
+            >
               <span className="text-[10px] font-semibold uppercase tracking-wider text-[#050409]/80">
                 {hero.builtWithLabel}
               </span>
@@ -285,7 +428,7 @@ export function Hero() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
           </div>
 
@@ -294,7 +437,17 @@ export function Hero() {
       </div>
 
       {/* MOBILE (below 768px): Two slow horizontal marquee rows above and below */}
-      <div className="md:hidden w-full my-6 overflow-hidden space-y-3 z-10">
+      <motion.div
+        className="md:hidden w-full my-6 overflow-hidden space-y-3 z-10"
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: shouldReduceMotion ? 0.2 : 0.6,
+          delay: shouldReduceMotion ? 0 : 0.3,
+          ease: EASE_OUT_EXPO,
+        }}
+        suppressHydrationWarning
+      >
         {/* Row 1 */}
         <div className="relative flex overflow-x-hidden">
           <div className="animate-marquee flex items-center gap-3 py-1">
@@ -329,10 +482,20 @@ export function Hero() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* BOTTOM RIGHT: "Works with" + 4 full-color brand logos + "+100 more integrations" */}
-      <div className="w-full max-w-7xl px-4 sm:px-10 pb-6 flex items-center justify-end text-xs text-[#050409]/75 select-none z-10">
+      {/* BOTTOM RIGHT: "Works with" + 4 full-color brand logos + "+100 more integrations" (fades in last) */}
+      <motion.div
+        className="w-full max-w-7xl px-4 sm:px-10 pb-6 flex items-center justify-end text-xs text-[#050409]/75 select-none z-10"
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: shouldReduceMotion ? 0.2 : 0.6,
+          delay: shouldReduceMotion ? 0 : 1.45,
+          ease: EASE_OUT_EXPO,
+        }}
+        suppressHydrationWarning
+      >
         <div className="flex items-center gap-2.5 bg-white/70 backdrop-blur-xs border border-[#050409]/10 px-3.5 py-1.5 rounded-full shadow-2xs">
           <span className="text-[11px] font-medium tracking-normal text-[#050409]">
             {hero.worksWithLabel}
@@ -352,7 +515,7 @@ export function Hero() {
             {hero.worksWithSuffix}
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Orbit and Float Animations */}
       <style jsx global>{`

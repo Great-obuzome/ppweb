@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { siteContent } from "@/data/content";
 import { Menu, X } from "lucide-react";
+
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,6 +14,7 @@ export function Navbar() {
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const navPillRef = useRef<HTMLElement>(null);
   const { brand, navigation } = siteContent;
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     let animationFrameId: number;
@@ -109,7 +112,17 @@ export function Navbar() {
         <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 flex items-center justify-between select-none">
           
           {/* Left: Brand Lockup [Icon] [UPBYNATURE] */}
-          <div className="flex-1 pointer-events-auto flex items-center">
+          <motion.div
+            className="flex-1 pointer-events-auto flex items-center"
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: shouldReduceMotion ? 0.2 : 0.5,
+              delay: 0,
+              ease: EASE_OUT_EXPO,
+            }}
+            suppressHydrationWarning
+          >
             <Link
               href="/"
               className="inline-flex items-center gap-3 sm:gap-3.5 group"
@@ -140,11 +153,19 @@ export function Navbar() {
                 {brand.name}
               </span>
             </Link>
-          </div>
+          </motion.div>
 
           {/* Center: Translucent Glass Floating Navbar Pill */}
-          <nav
+          <motion.nav
             ref={navPillRef}
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: shouldReduceMotion ? 0.2 : 0.5,
+              delay: 0,
+              ease: EASE_OUT_EXPO,
+            }}
+            suppressHydrationWarning
             className="hidden md:flex items-center p-1.5 rounded-full text-xs font-semibold uppercase tracking-[0.16em] relative pointer-events-auto transition-all duration-200 select-none glass-nav-pill"
             style={{
               backgroundColor: isDark
@@ -223,10 +244,20 @@ export function Navbar() {
                 );
               })}
             </div>
-          </nav>
+          </motion.nav>
 
           {/* Right: CTA Links & Buttons */}
-          <div className="hidden sm:flex flex-1 items-center justify-end space-x-5 pointer-events-auto">
+          <motion.div
+            className="hidden sm:flex flex-1 items-center justify-end space-x-5 pointer-events-auto"
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: shouldReduceMotion ? 0.2 : 0.5,
+              delay: 0,
+              ease: EASE_OUT_EXPO,
+            }}
+            suppressHydrationWarning
+          >
             <a
               href={navigation.ctaSecondary.href}
               target="_blank"
@@ -250,10 +281,20 @@ export function Navbar() {
             >
               {navigation.ctaPrimary.label}
             </a>
-          </div>
+          </motion.div>
 
           {/* Mobile Menu Toggle Button */}
-          <div className="flex sm:hidden items-center pointer-events-auto">
+          <motion.div
+            className="flex sm:hidden items-center pointer-events-auto"
+            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: shouldReduceMotion ? 0.2 : 0.5,
+              delay: 0,
+              ease: EASE_OUT_EXPO,
+            }}
+            suppressHydrationWarning
+          >
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle Navigation Menu"
@@ -269,7 +310,7 @@ export function Navbar() {
                 <Menu className="w-5 h-5" />
               )}
             </button>
-          </div>
+          </motion.div>
 
         </div>
 
